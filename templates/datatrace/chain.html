@@ -1,0 +1,339 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<style>
+  /* Chain view: full usable viewport width, compensate for main-content padding */
+  #chain-container {
+    width: calc(100vw - var(--sidebar-w) - 2px);
+    margin-left: -1.5rem;
+    height: calc(100vh - var(--topbar-h) - 175px);
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    position: relative;
+  }
+  .vis-network:focus { outline: none; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header flex justify-between items-center" style="flex-wrap:wrap; gap:0.5rem;">
+  <div>
+    <h1>Data Flow Chain</h1>
+    <div class="subtitle">
+      Showing {{ count }} of {{ total }} processes &nbsp;·&nbsp;
+      Scroll to zoom · Drag to pan · Dbl-click to fit · Click SP to inspect
+    </div>
+  </div>
+  <a href="{{ url_for('datatrace.index') }}" class="btn btn-secondary btn-sm">
+    <i class="bi bi-arrow-left"></i> Catalog
+  </a>
+</div>
+
+<!-- Warehouse / keyword filter -->
+<form class="filter-bar mb-3" method="get">
+  <div class="filter-group">
+    <label>Warehouse</label>
+    <select name="warehouse" class="form-select" onchange="this.form.submit()">
+      {% for wh in warehouses %}
+      <option value="{{ wh }}" {% if wh == sel_warehouse %}selected{% endif %}>{{ wh }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="filter-group flex-grow">
+    <label>Keyword</label>
+    <input type="text" name="q" class="form-control" value="{{ keyword }}"
+           placeholder="Exact SP name…">
+  </div>
+  <div class="filter-group" style="justify-content:flex-end; padding-top:1.4rem;">
+    <div class="flex gap-2">
+      <button type="submit" class="btn btn-primary btn-sm">Apply</button>
+      {% if keyword %}<a href="?warehouse={{ sel_warehouse }}" class="btn btn-secondary btn-sm">Clear</a>{% endif %}
+    </div>
+  </div>
+</form>
+
+<!-- Inline search / jump -->
+<div style="position:relative; margin-bottom:0.75rem; max-width:360px;">
+  <input type="text" id="chain-search" class="form-control"
+         placeholder="Jump to table or SP…" autocomplete="off">
+  <div id="chain-suggestions" style="display:none; position:absolute; top:100%; left:0; right:0; z-index:500;
+       background:var(--surface); border:1px solid var(--border); border-radius:7px;
+       max-height:200px; overflow-y:auto; margin-top:2px;"></div>
+</div>
+
+<!-- Chain container -->
+<div id="chain-container">
+
+  <!-- Loading overlay (hidden once vis.js fires afterDrawing) -->
+  <div id="chain-loading" style="position:absolute; inset:0; display:flex; align-items:center;
+       justify-content:center; background:#0d1117; z-index:10; gap:0.75rem; color:var(--text-muted);">
+    <span class="spinner" style="width:18px; height:18px; flex-shrink:0;"></span>
+    Computing layout…
+  </div>
+
+  <!-- vis.js renders here -->
+  <div id="chain-network" style="width:100%; height:100%;"></div>
+
+  <!-- SP detail panel -->
+  <div id="sp-panel" style="display:none; position:absolute; top:1rem; right:1rem; width:300px;
+       background:var(--surface); border:1px solid var(--border); border-radius:var(--radius);
+       padding:1rem; max-height:calc(100% - 2rem); overflow-y:auto; z-index:100;">
+    <div id="panel-resize-handle" style="position:absolute; left:0; top:0; bottom:0; width:5px;
+         cursor:ew-resize; background:var(--border); border-radius:3px 0 0 3px;"></div>
+    <div class="flex justify-between items-center mb-3">
+      <strong id="panel-name" style="font-size:0.9rem;"></strong>
+      <button onclick="closePanel()" class="btn btn-secondary btn-sm btn-icon">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div id="panel-badges" class="flex gap-1 mb-2" style="flex-wrap:wrap;"></div>
+    <div class="text-sm text-muted mb-3" id="panel-description"></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-bottom:0.75rem;">
+      <div>
+        <div class="text-xs text-muted mb-1" style="font-weight:700; text-transform:uppercase;">Sources</div>
+        <ul id="panel-sources" style="margin:0; padding-left:1rem; font-size:0.8rem;"></ul>
+      </div>
+      <div>
+        <div class="text-xs text-muted mb-1" style="font-weight:700; text-transform:uppercase;">Targets</div>
+        <ul id="panel-targets" style="margin:0; padding-left:1rem; font-size:0.8rem;"></ul>
+      </div>
+    </div>
+    <a id="panel-link" href="#" class="btn btn-primary btn-sm w-full" style="justify-content:center;">
+      <i class="bi bi-box-arrow-up-right"></i> Open SP Detail
+    </a>
+    <div id="panel-chart-container" style="margin-top:0.75rem;"></div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/vis-network@9.1.2/dist/vis-network.min.js"></script>
+<script>
+const GRAPH_DATA   = {{ graph | tojson }};
+const SERVER_INDEX = {{ search_index | tojson }};
+const PROC_MAP     = {{ proc_map | tojson }};
+const DETAIL_BASE  = "{{ url_for('datatrace.detail', name='__NAME__') }}".replace('__NAME__','');
+const TABLE_BASE   = "{{ url_for('datatrace.table_usage', table_name='__T__') }}".replace('__T__','');
+
+// SP node-id → proc name lookup (used for panel)
+const SP_NODE_MAP = {};
+SERVER_INDEX.forEach(item => {
+  if (item.node_id.startsWith('SP_') && PROC_MAP[item.label])
+    SP_NODE_MAP[item.node_id] = item.label;
+});
+
+let network = null;
+
+// ── vis.js Network ────────────────────────────────────────────────────────────
+
+function initNetwork() {
+  const container = document.getElementById('chain-network');
+  const nodes = new vis.DataSet(GRAPH_DATA.nodes);
+  const edges = new vis.DataSet(GRAPH_DATA.edges);
+
+  const options = {
+    layout: {
+      hierarchical: {
+        enabled:              true,
+        direction:            'LR',
+        sortMethod:           'directed',
+        levelSeparation:      160,   // px between columns
+        nodeSpacing:          40,    // px between nodes in same column
+        treeSpacing:          60,    // px between separate trees
+        blockShifting:        false, // prevent nodes being pushed to extra-high levels
+        edgeMinimization:     false,
+        parentCentralization: true,
+        shakeTowards:         'roots',
+      },
+    },
+    nodes: {
+      shape:           'box',
+      margin:          { top: 4, bottom: 4, left: 7, right: 7 },
+      widthConstraint: { minimum: 80, maximum: 220 },
+      borderWidth:     1,
+      shadow:          false,
+    },
+    edges: {
+      arrows:     { to: { enabled: true, scaleFactor: 0.6 } },
+      color:      { color: '#2d3a5e', highlight: '#3b82f6', hover: '#3b82f6' },
+      smooth:     { enabled: true, type: 'cubicBezier',
+                    forceDirection: 'horizontal', roundness: 0.4 },
+      width:      1,
+      hoverWidth: 2,
+    },
+    physics:     { enabled: false },
+    interaction: {
+      hover:             true,
+      tooltipDelay:      300,
+      navigationButtons: false,
+      keyboard:          false,
+      zoomSpeed:         0.5,
+    },
+  };
+
+  network = new vis.Network(container, { nodes, edges }, options);
+
+  // Fit the full graph into view once layout is painted, then hide overlay
+  network.once('afterDrawing', () => {
+    network.fit({ animation: false });
+    document.getElementById('chain-loading').style.display = 'none';
+  });
+
+  // Click SP node → open detail panel
+  network.on('click', params => {
+    if (params.nodes.length > 0) {
+      const name = SP_NODE_MAP[params.nodes[0]];
+      if (name) showSpPanel(name);
+    }
+  });
+
+  // Double-click empty space → fit
+  network.on('doubleClick', params => {
+    if (params.nodes.length === 0)
+      network.fit({ animation: { duration: 400, easingFunction: 'easeInOutQuad' } });
+  });
+}
+
+function jumpToNode(nodeId) {
+  if (!network) return;
+  network.focus(nodeId, { scale: 1.8,
+    animation: { duration: 400, easingFunction: 'easeInOutQuad' } });
+  network.selectNodes([nodeId]);
+}
+window.jumpToNode = jumpToNode;
+
+// ── SP detail panel ───────────────────────────────────────────────────────────
+
+let _mermaid = null;
+async function _getMermaid() {
+  if (!_mermaid) {
+    const { default: m } = await import(
+      'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs');
+    m.initialize({ startOnLoad: false, theme: 'dark', maxEdges: 9999,
+      themeVariables: { darkMode: true, background: '#0d1117', primaryColor: '#1d4ed8' } });
+    _mermaid = m;
+  }
+  return _mermaid;
+}
+
+let _panelChartSeq = 0;
+
+async function showSpPanel(name) {
+  const proc = PROC_MAP[name];
+  if (!proc) return;
+
+  document.getElementById('panel-name').textContent        = name;
+  document.getElementById('panel-link').href               = DETAIL_BASE + encodeURIComponent(name);
+  document.getElementById('panel-description').textContent = proc.description || '';
+
+  document.getElementById('panel-badges').innerHTML = `
+    <span class="badge badge-blue">${proc.warehouse}</span>
+    <span class="badge badge-purple">${proc.type}</span>
+    <span class="badge badge-teal">${proc.load_strategy}</span>
+    ${proc.cross_db ? '<span class="badge badge-amber">Cross-DB</span>' : ''}`;
+
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  document.getElementById('panel-sources').innerHTML =
+    proc.sources.map(s =>
+      `<li><a href="${TABLE_BASE}${encodeURIComponent(s)}">${esc(s)}</a></li>`).join('');
+  document.getElementById('panel-targets').innerHTML =
+    proc.targets.map(t =>
+      `<li><a href="${TABLE_BASE}${encodeURIComponent(t)}">${esc(t)}</a></li>`).join('');
+
+  document.getElementById('sp-panel').style.display = '';
+
+  // Mini Mermaid chart (lazy-loaded)
+  const ctr = document.getElementById('panel-chart-container');
+  ctr.innerHTML = '';
+  try {
+    const mermaid = await _getMermaid();
+    const spId    = 'SP_' + name.replace(/\W/g, '_');
+    const color   = proc.cross_db ? '#0284c7' : '#1d4ed8';
+    const q       = s => s.replace(/"/g, "'");
+    const lines   = ['flowchart LR'];
+    proc.sources.forEach((src, i) => {
+      const t = `S${i}_` + src.replace(/\W/g, '_');
+      lines.push(`  ${t}["${q(src)}"]`, `  ${t} --> ${spId}`);
+    });
+    lines.push(`  ${spId}["${q(name)}\\n${q(proc.load_strategy)}"]`);
+    lines.push(`  style ${spId} fill:${color},color:#fff,stroke:#333`);
+    proc.targets.forEach((tgt, i) => {
+      const t = `T${i}_` + tgt.replace(/\W/g, '_');
+      lines.push(`  ${t}["${q(tgt)}"]`, `  ${spId} --> ${t}`);
+    });
+    const { svg } = await mermaid.render('pchart-' + (++_panelChartSeq), lines.join('\n'));
+    ctr.innerHTML = svg;
+  } catch { /* mini-chart optional */ }
+}
+
+window.closePanel = function() {
+  document.getElementById('sp-panel').style.display = 'none';
+};
+
+// ── Search / jump ─────────────────────────────────────────────────────────────
+
+const searchInput = document.getElementById('chain-search');
+const suggestBox  = document.getElementById('chain-suggestions');
+
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.trim().toLowerCase();
+  suggestBox.innerHTML = '';
+  if (!q) { suggestBox.style.display = 'none'; return; }
+  const matches = SERVER_INDEX.filter(n => n.label.toLowerCase().includes(q)).slice(0, 15);
+  if (!matches.length) { suggestBox.style.display = 'none'; return; }
+  matches.forEach(m => {
+    const div = document.createElement('div');
+    div.style.cssText = 'padding:0.5rem 0.75rem; cursor:pointer; font-size:0.85rem;';
+    div.textContent = m.label;
+    div.addEventListener('mouseenter', () => div.style.background = 'var(--surface2)');
+    div.addEventListener('mouseleave', () => div.style.background = '');
+    div.addEventListener('mousedown',  e => {
+      e.preventDefault();
+      searchInput.value = m.label;
+      suggestBox.style.display = 'none';
+      jumpToNode(m.node_id);
+    });
+    suggestBox.appendChild(div);
+  });
+  suggestBox.style.display = '';
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#chain-search') && !e.target.closest('#chain-suggestions'))
+    suggestBox.style.display = 'none';
+});
+
+// ── Panel resize handle ───────────────────────────────────────────────────────
+
+(function() {
+  const handle = document.getElementById('panel-resize-handle');
+  const panel  = document.getElementById('sp-panel');
+  let dragging = false, startX = 0, startW = 0;
+  handle.addEventListener('mousedown', e => {
+    dragging = true; startX = e.clientX; startW = panel.offsetWidth;
+    document.body.style.cursor = 'ew-resize';
+    document.body.style.userSelect = 'none';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const w = Math.max(240, Math.min(window.innerWidth * 0.7, startW + (startX - e.clientX)));
+    panel.style.width = w + 'px';
+  });
+  document.addEventListener('mouseup', () => {
+    if (!dragging) return;
+    dragging = false;
+    document.body.style.cursor = '';
+    document.body.style.userSelect = '';
+  });
+})();
+
+// ── Boot ──────────────────────────────────────────────────────────────────────
+initNetwork();
+</script>
+{% endblock %}

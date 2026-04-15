@@ -1,0 +1,1263 @@
+[
+  {
+    "id": "5328f311-e6b3-4d93-89d4-896685a015cd",
+    "name": "PL_Copy_Table_From_DW_App_Support to DB_APP_SUPPORT",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "DB_App_Support.dbo.PROPERTY_METRICS_REFORECASTED_REVENUE_0"
+    ]
+  },
+  {
+    "id": "b976b0b2-589b-4469-a75b-ea9e9d7dd85d",
+    "name": "PL_Day_Batch_Migration_ROHIT",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "1bf690c7-9b6a-4727-b665-700277feef80",
+    "name": "PL_LEASE_PRECURSORS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[ADMIN_APP_FEES_0_SP]",
+      "SP: [dbo].[APPLICANT_TRANSMISSIONS_0_SP]",
+      "SP: [dbo].[COLLECTIONS_0_SP]",
+      "SP: [dbo].[CONCESSIONS_0_SP]",
+      "SP: [dbo].[CUSTOMERS_0_SP]",
+      "SP: [dbo].[CUSTOMER_GENDER_0_SP]",
+      "SP: [dbo].[CUSTOMER_GRADUATION_0_SP]",
+      "SP: [dbo].[CUSTOMER_SCHOOL_0_SP]",
+      "SP: [dbo].[DEPOSITS_CHARGED_COMBO_0_SP]",
+      "SP: [dbo].[GIFT_CARDS_0_SP]",
+      "SP: [dbo].[GUARANTORS_0_SP]",
+      "SP: [dbo].[INSURANCE_0_SP]",
+      "SP: [dbo].[INSURANCE_BY_INTERVAL_0_SP]",
+      "SP: [dbo].[INSURANCE_BY_INTERVAL_LEGACY_0_SP]",
+      "SP: [dbo].[INSURANCE_LEDGER_CHARGES_0_SP]",
+      "SP: [dbo].[INSURANCE_SCHED_CHARGES_0_SP]",
+      "SP: [dbo].[LEASE_INTERVAL_APPS_0_SP]",
+      "SP: [dbo].[LEASE_INTERVAL_AY_0_SP]",
+      "SP: [dbo].[LEASE_TERMS_0_SP]",
+      "SP: [dbo].[RATE_TIERS_0A_SP]",
+      "SP: [dbo].[RATE_TIERS_0B_SP]",
+      "SP: [dbo].[RATE_TIERS_SP]",
+      "SP: [dbo].[RATE_TIER_F_SP]",
+      "SP: [dbo].[RENT_CHARGES_0_SP]",
+      "SP: [dbo].[SCHED_LOCK_OFF_DISCOUNT_0_SP]",
+      "SP: [dbo].[SCHED_LOCK_OFF_PREMIUM_0_SP]",
+      "SP: [dbo].[SCHED_RENT_DISCOUNT_0_SP]",
+      "SP: [dbo].[SHORT_TERM_PREMIUMS_0_SP]",
+      "SP: [dbo].[SURVEY_RESPONSES_0_SP]",
+      "SP: [dbo].[sp_Leasing_Referral_Cost_0]",
+      "SP: [dbo].[sp_Leasing_Referral_Discount_0]"
+    ]
+  },
+  {
+    "id": "272444f7-c29b-41b0-a19d-ca4113748f78",
+    "name": "PL_LEASES",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[FLOORPLANS_0_PRECURSOR_SP]",
+      "SP: [dbo].[FLOORPLANS_0_SP]",
+      "SP: [dbo].[FLOORPLANS_1_SP]",
+      "SP: [dbo].[FLOORPLANS_F_SP]",
+      "SP: [dbo].[FLOORPLANS_SP]",
+      "SP: [dbo].[FLOORPLAN_KEY_FILTER_0_SP]",
+      "SP: [dbo].[UNIT_TYPES_0_SP]"
+    ]
+  },
+  {
+    "id": "855eabfd-02c3-498b-88ba-1ff8a43e157a",
+    "name": "PL_EXEC_SP",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "LOADER",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: @{concat('[', pipeline().parameters.SCHEMA_NAME, ']..[', pipeline().parameters.OBJECT_NAME, ']')}"
+    ]
+  },
+  {
+    "id": "4ceb89dd-df37-4415-8216-a1080f41fc3e",
+    "name": "PL_IMPORT_EXECUTION_PLAN",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "LOADER",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "cd7beae9-4e32-4f66-92bd-ada9a537bced",
+    "name": "PL_MASTER_ORCHESTRATOR",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "LOADER",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: control.usp_CloseRunLog",
+      "SP: control.usp_CloseStepLog",
+      "SP: control.usp_OpenRunLog",
+      "SP: control.usp_OpenStepLog",
+      "SP: control.usp_UpdatePlanLastRun"
+    ]
+  },
+  {
+    "id": "60ff13b9-52ce-455a-a3a0-b5636b443091",
+    "name": "PL_SEND_NOTIFICATION",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "LOADER",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: control.usp_GetRunSummary"
+    ]
+  },
+  {
+    "id": "ba3809b9-d580-42b0-9e36-e1e612827f1c",
+    "name": "AppSupportTest1",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs - Craig",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "DB_App_Support.dbo.PROPERTY_0"
+    ]
+  },
+  {
+    "id": "ada32bb4-ecbf-45fc-a5ae-bb3e1d2d42d9",
+    "name": "Migrate_DW_PROD2_to_WH_PROD2",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs - Craig",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "WH_PROD2.{'value': '@{item().SchemaName}', 'type': 'Expression'}.{'value': '@{item().TableName}', 'type': 'Expression'}"
+    ]
+  },
+  {
+    "id": "9e3f106a-01d9-4bcf-b385-2d148ddd8a6f",
+    "name": "Migration_Pipeline2",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs - Craig",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "0792ee75-48f3-4023-8ace-1dcb6e9e501c",
+    "name": "PL Batch Migration ",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs - Craig",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "WH_PROD2.dbo.LEASE_FACTS"
+    ]
+  },
+  {
+    "id": "7f891890-190c-4d06-a22e-187205fe165c",
+    "name": "PL_Clone_Metadata_Table_From_WH_CONFIG",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs - Craig",
+    "description": "",
+    "sources": [
+      "WH_Config.config.PipelineMetadata"
+    ],
+    "targets": [
+      "DB_BI_Support.control.PL_METADATA_ENTRATA"
+    ]
+  },
+  {
+    "id": "91853bad-1a95-4022-adec-bdc0e83f9251",
+    "name": "PL_Copy_Table_From_ODS_to_WH_ODS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs - Craig",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "WH_ODS.dbo.E_AR_CODE_TYPES"
+    ]
+  },
+  {
+    "id": "9a17754c-2caa-4269-a6dd-e2e9a6ac433b",
+    "name": "PL_Day_Batch_Migration",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs - Craig",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "WH_PROD2.dbo.LEASE_FACTS"
+    ]
+  },
+  {
+    "id": "2b9b2708-48d0-4d7a-85fd-20c878467ceb",
+    "name": "PL_Reload_Table_From_On_PREM",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs - Craig",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "WH_STAGING.dbo.FORECAST_BUDGET_TIERS"
+    ]
+  },
+  {
+    "id": "bf5e22a5-a23f-4ad1-a9d4-539fa92d3630",
+    "name": "PL_Test_cp_SP_from_App_support",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs - Craig",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[RATE_TIER_F_SP]"
+    ]
+  },
+  {
+    "id": "67daf2e5-f268-48df-8b0f-31877773e914",
+    "name": "refresh Leases_0",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs - Craig",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "WH_STAGING.dbo.LEASES_0"
+    ]
+  },
+  {
+    "id": "a63f3b1d-9d89-487f-9429-d3ca54197ad8",
+    "name": "pipeline - appsupport",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs Backup / Backup 2 / DB_APPSUPPORT",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "DB_App_Support.{'value': '@item().TargetSchema', 'type': 'Expression'}.{'value': '@item().TargetTable', 'type': 'Expression'}"
+    ]
+  },
+  {
+    "id": "9ee4789d-e87a-4a37-82a2-61c31fd33510",
+    "name": "pipeline - appsupport_copy1",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs Backup / Backup 2 / WH_ODS",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "b121c413-6b4a-4287-84b3-c23688f45167",
+    "name": "pipeline - appsupport_copy2",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs Backup / Backup 2 / WH_PROD",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "WH_PROD2.{'value': '@item().TargetSchema', 'type': 'Expression'}.{'value': '@item().TargetTable', 'type': 'Expression'}"
+    ]
+  },
+  {
+    "id": "88171f63-99f9-41f5-9cdf-1207310391de",
+    "name": "pipeline_staging2_incremental",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs Backup / Backup 2 / WH_STAGING",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "e1bb9cce-874b-4b4f-9c3f-9d1af4a28572",
+    "name": "Staging2 Orchestration",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs Backup / Backup 2 / WH_STAGING",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "a0c08f95-2762-46ec-a97f-383d53917fe8",
+    "name": "Grouper Testing",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs Backup / Testing",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: PDM_Property_0_Precursor_SP"
+    ]
+  },
+  {
+    "id": "70efb627-85c7-47d6-8908-702687fbc2c5",
+    "name": "pipeline1",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs Backup / Testing",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "13f64d26-e537-4df1-bb60-1f2962eda2dd",
+    "name": "pipeline2",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs Backup / Testing",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "b030e8c7-1ae5-4e15-a09d-3438e5ea8aa6",
+    "name": "pipeline3",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs Backup / Testing",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "b66f7e8e-6314-4544-bccb-142d1c596c2c",
+    "name": "PL__DW_UPDATE_FULL",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "3f938e04-d433-4641-8d28-65569c55521d",
+    "name": "PL_AD_MANAGERS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / AD USERS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[AD_MANAGERS_0_SP]"
+    ]
+  },
+  {
+    "id": "999e514f-0197-4be0-b365-812737a32251",
+    "name": "PL_AD_USER_MASTER",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / AD USERS",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "a749d3ad-c876-4313-92d9-80aed0a35ee3",
+    "name": "PL_AD_USERS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / AD USERS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[AD_MANAGERS_0_SP]",
+      "SP: [dbo].[AD_USERS_0_SP]"
+    ]
+  },
+  {
+    "id": "199abd09-aa3b-4d19-aca3-6d77626d0d95",
+    "name": "PL_AGENTS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / APPLICATIONS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[AGENTS_0_SP]"
+    ]
+  },
+  {
+    "id": "fa6d7b63-053f-43c2-aaa5-70ab3398742c",
+    "name": "PL_APPLICATION_FACT",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / APPLICATIONS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[APPLICATION_FACTS_F_SP]",
+      "SP: [dbo].[APPLICATION_FACTS_SP]"
+    ]
+  },
+  {
+    "id": "0ab006aa-f05b-46b2-9ce6-6d531426151f",
+    "name": "PL_APPLICATIONS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / APPLICATIONS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[APPLICATIONS_F_SP]",
+      "SP: [dbo].[APPLICATIONS_SP]",
+      "SP: [dbo].[APPLICATION_STAGE_STATUS_STEP_1_SP]",
+      "SP: [dbo].[APPLICATION_STATUS_PRIOR_DAY_0_SP]",
+      "SP: [dbo].[Applications_0_SP]",
+      "SP: [dbo].[LEAD_SOURCES_0_SP]"
+    ]
+  },
+  {
+    "id": "26bda675-9664-4512-bc0b-0bd969f6ef8c",
+    "name": "PL_APPLICATIONS_AGG",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / APPLICATIONS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[APPLICATIONS_AGG_F_SP]",
+      "SP: [dbo].[APPLICATION_AGG_SP]"
+    ]
+  },
+  {
+    "id": "1ddb2ae9-1171-4c32-ab58-f31de19e41be",
+    "name": "PL_APPLICATIONS_MASTER",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / APPLICATIONS",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "16558baf-79d1-46a4-a8d2-cc423026b689",
+    "name": "PL_CONTACT_EVENTS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / APPLICATIONS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[CONTACT_EVENTS_0_SP]",
+      "SP: [dbo].[CONTACT_EVENTS_VISITS_AGG_SP]"
+    ]
+  },
+  {
+    "id": "94dbee8a-e890-4d5f-81ad-7d6ad51021d4",
+    "name": "PL_STAGE_STATUS_STEP",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / APPLICATIONS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[STAGE_STATUS_STEP_F_SP]",
+      "SP: [dbo].[STAGE_STATUS_STEP_SP]"
+    ]
+  },
+  {
+    "id": "3036f423-437b-41a2-828e-1c573a9f06d8",
+    "name": "PL_DATE_MASTER",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / DATES",
+    "description": "This pipeline runs a series of steps to prepare and update date and academic year information in a data warehouse. It makes sure that each step happens in the right order, starting with academic year data and then moving on to general date and year data.",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[ACADEMIC_YEARS_SP]",
+      "SP: [dbo].[ACADEMIC_YEAR_0_SP]",
+      "SP: [dbo].[ACADEMIC_YEAR_F_SP]",
+      "SP: [dbo].[AY_WEEKS_BY_DAY_0_SP]",
+      "SP: [dbo].[AY_WEEKS_F_SP]",
+      "SP: [dbo].[AY_WEEKS_SP]",
+      "SP: [dbo].[CURRENT_WEEK_0_SP]",
+      "SP: [dbo].[DATES_SP]",
+      "SP: [dbo].[DATE_0_SP]",
+      "SP: [dbo].[DATE_F_SP]",
+      "SP: [dbo].[MS_DATE_BUILDER_SP]",
+      "SP: [dbo].[RELATED_DATES_0_SP]",
+      "SP: [dbo].[YEARS_F_SP]",
+      "SP: [dbo].[YEARS_SP]"
+    ]
+  },
+  {
+    "id": "a34a5f6b-5b2d-40e4-9ad8-fd7a075c1e61",
+    "name": "PL_FLOORPLAN_FACTS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / FLOORPLAN, UNITS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[FLOORPLAN_FACTS_SP]",
+      "SP: [dbo].[FLOORPLAN_FACT_F_SP]"
+    ]
+  },
+  {
+    "id": "4cd4124d-f009-411b-9150-a02435953d2e",
+    "name": "PL_FLOORPLANS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / FLOORPLAN, UNITS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[FLOORPLANS_0_PRECURSOR_SP]",
+      "SP: [dbo].[FLOORPLANS_0_SP]",
+      "SP: [dbo].[FLOORPLANS_1_SP]",
+      "SP: [dbo].[FLOORPLANS_F_SP]",
+      "SP: [dbo].[FLOORPLANS_SP]",
+      "SP: [dbo].[FLOORPLAN_KEY_FILTER_0_SP]",
+      "SP: [dbo].[UNIT_TYPES_0_SP]"
+    ]
+  },
+  {
+    "id": "9c1b82a4-8b58-4f54-85b1-953bbfc3e16b",
+    "name": "PL_FLOORPLANS_UNITS_MASTER",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / FLOORPLAN, UNITS",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "b7d33585-35ed-4c29-8778-7749518620c6",
+    "name": "PL_UNIT_FACT",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / FLOORPLAN, UNITS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[UNIT_FACTS_F_SP]",
+      "SP: [dbo].[UNIT_FACTS_SP]",
+      "SP: [dbo].[UNIT_OCCUPANCY_SNAPSHOT_0_ONBOARDS_SP]"
+    ]
+  },
+  {
+    "id": "17a97aca-0918-4086-bfc5-4a1c72b359b0",
+    "name": "PL_UNITS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / FLOORPLAN, UNITS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[UNITS_F_SP]",
+      "SP: [dbo].[UNITS_SP]",
+      "SP: [dbo].[UNIT_KEYS_0_ADDNEW_SP]"
+    ]
+  },
+  {
+    "id": "24c23b02-b017-4797-931d-0d699ff0ec9e",
+    "name": "PL_LEAD_EVENTS_MASTER",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / LEAD EVENTS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[LEADS_0_SP]",
+      "SP: [dbo].[LEAD_APPLICATION_EVENTS_0_SP]",
+      "SP: [dbo].[LEAD_APPLICATION_EVENTS_1_SP]",
+      "SP: [dbo].[LEAD_EVENTS_0_SP]",
+      "SP: [dbo].[LEAD_EVENTS_AGG_F_SP]",
+      "SP: [dbo].[LEAD_EVENTS_AGG_SP]",
+      "SP: [dbo].[LEAD_EVENTS_FACT_F_SP]",
+      "SP: [dbo].[LEAD_EVENTS_FACT_SP]",
+      "SP: [dbo].[LEAD_EVENTS_F_SP]",
+      "SP: [dbo].[LEAD_EVENTS_SP]"
+    ]
+  },
+  {
+    "id": "684bc35c-b8de-4b8d-a587-35e3245abbb4",
+    "name": "PL_PROPERTY",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / PROPERTY",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[PROPERTY_0_TO_STAGING_SP]",
+      "SP: [dbo].[PROPERTY_F_IN_STAGING_SP]",
+      "SP: [dbo].[PROPERTY_GROUP_F_SYNC_SP]",
+      "SP: [dbo].[PROPERTY_GROUP_SP]",
+      "SP: [dbo].[PROPERTY_SP]"
+    ]
+  },
+  {
+    "id": "f0c6f687-e9bd-46c4-8c31-8e2b6afea79d",
+    "name": "PL_PROPERTY_AY",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / PROPERTY",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[APP_PROPERTY_AY_SYNC_SP]",
+      "SP: [dbo].[PROPERTY_AY_0_ADDNEW_SP]",
+      "SP: [dbo].[PROPERTY_AY_0_DATEIDS_SP]",
+      "SP: [dbo].[PROPERTY_AY_0_SYNC_SP]",
+      "SP: [dbo].[PROPERTY_AY_BY_DAY_0_SP]",
+      "SP: [dbo].[PROPERTY_AY_F_SP]",
+      "SP: [dbo].[PROPERTY_AY_SP]"
+    ]
+  },
+  {
+    "id": "dd41b006-5aa5-4e75-8dea-d43ad66e9984",
+    "name": "PL_PROPERTY_FACT",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / PROPERTY",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[PROPERTY_FACTS_SP]",
+      "SP: [dbo].[PROPERTY_FACT_F_SP]"
+    ]
+  },
+  {
+    "id": "c9dcb4a4-73bc-4e65-b9e2-39d7108cba5b",
+    "name": "PL_PROPERTY_MASTER",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / PROPERTY",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[FAS_EMAIL_TARGETS_SP]"
+    ]
+  },
+  {
+    "id": "1d21ac5c-aeaa-43ef-99f8-6069d9448054",
+    "name": "PL_PROPERTY_PDM_UPDATES",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / DW UPDATE PIPELINES / PROPERTY",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: [dbo].[MBR_PARENT_0_UPDATE_SP]",
+      "SP: [dbo].[PDM_App_SupportTablesRefresh_SP]",
+      "SP: [dbo].[PDM_PROPERTY_0_RENEWAL_BASE_UPDATE_SP]",
+      "SP: [dbo].[PDM_PROPERTY_0_UPDATE_SP]",
+      "SP: [dbo].[PDM_Property_0_Precursor_SP]",
+      "SP: [dbo].[PDM_to_MS_Parent_SYNC_assignments_only_SP]",
+      "SP: [dbo].[PDM_to_MS_Parent_SYNC_comp_only_SP]",
+      "SP: [dbo].[PDM_to_MS_Parent_SYNC_parent_only_SP]",
+      "SP: [dbo].[PROPERTY_HOURS_0_SP]",
+      "SP: [dbo].[PROPERTY_KEYS_0_SP]",
+      "SP: [dbo].[Property_0_Global_Update_SP]",
+      "SP: [dbo].[Property_0_Remove_Terms_SP]"
+    ]
+  },
+  {
+    "id": "a4c36427-9e22-475e-aec5-ba8c061dc9fc",
+    "name": "PL_Adaptive_Imports_From_FileDropSite_to_WH_ODS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / ADAPTIVE IMPORTS (to WH_ODS)",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "caf067d2-f2b7-45ac-828c-b82cbd52bde5",
+    "name": "pipeline4",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / API's / EliseAI",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "da1794d1-7b89-4f15-a798-99b8ecf6610c",
+    "name": "PL_ELISEAI_API's",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / API's / EliseAI",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "69e276fc-4aac-4213-ad62-58d392ba5cc4",
+    "name": "PL_GA4_API's",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / API's / GA4",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "115dbc09-304d-4986-919f-a11023838bef",
+    "name": "PL_JTURNER_API's",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / API's / JTurner",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "8ba5d0eb-dc29-4cdf-81c3-683583e1ea3d",
+    "name": "PL_REPUTATION_API's",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / API's / Reputation",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "3cc9598a-faa0-495e-b7b1-21855cf1ae36",
+    "name": "PL_TOUR24_API's",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / API's / TOUR24",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "2e8c9acb-57ae-444f-9e8c-dda705a540f1",
+    "name": "PL_ACTIVE_DIRECTORY_IMPORT",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / EMPLOYEE IMPORTS",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "6d3f8f0f-8d7c-423d-b02d-0e68ecc68ceb",
+    "name": "PL_PAYCOM_FILE_IMPORTS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / EMPLOYEE IMPORTS",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "55a89fe1-2d21-41b9-b157-a91ed8f9d09d",
+    "name": "Pipe_Sync_AD_EMPLOYEES_0",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / APP_SUPPORT_SYNC",
+    "description": "",
+    "sources": [
+      "WH_STAGING.dbo.AD_EMPLOYEES_0"
+    ],
+    "targets": [
+      "DB_App_Support.xtemp.AD_EMPLOYEES_0",
+      "SP: [xtemp].[sp_Prepare_AD_EMPLOYEES_0_Reload]"
+    ]
+  },
+  {
+    "id": "63db1135-d81c-449e-8409-3302eb6a4a9f",
+    "name": "Pipe_Sync_CONCESSION_TARGETS_0",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / APP_SUPPORT_SYNC",
+    "description": "",
+    "sources": [
+      "WH_STAGING.dbo.CONCESSION_TARGETS_0"
+    ],
+    "targets": [
+      "DB_App_Support.xtemp.CONCESSION_TARGETS_0",
+      "SP: [xtemp].[sp_Prepare_UNIT_OCCUPANCY_SNAPSHOT_0_Reload]"
+    ]
+  },
+  {
+    "id": "12af9928-bbff-4f54-acd8-056ed090d909",
+    "name": "Pipe_Sync_DATE_F",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / APP_SUPPORT_SYNC",
+    "description": "Runs within PL_DATE_MASTER",
+    "sources": [
+      "WH_STAGING.dbo.DATE_F"
+    ],
+    "targets": [
+      "DB_App_Support.xtemp.DATE_F",
+      "SP: [xtemp].[sp_Prepare_Date_F_Reload]"
+    ]
+  },
+  {
+    "id": "05c9eafd-5ec3-48b3-ac44-07350eabbc0c",
+    "name": "Pipe_Sync_E_PROPERTIES",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / APP_SUPPORT_SYNC",
+    "description": "",
+    "sources": [
+      "WH_ODS.dbo.E_PROPERTIES"
+    ],
+    "targets": [
+      "DB_App_Support.xtemp.E_PROPERTIES",
+      "SP: [xtemp].[sp_Prepare_E_PROPERTIES_Reload]"
+    ]
+  },
+  {
+    "id": "cbdd0312-df75-4eee-8190-8989acad7f04",
+    "name": "Pipe_Sync_EMPLOYEE_F",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / APP_SUPPORT_SYNC",
+    "description": "",
+    "sources": [
+      "WH_STAGING.dbo.EMPLOYEE_F"
+    ],
+    "targets": [
+      "DB_App_Support.xtemp.EMPLOYEE_F",
+      "SP: [xtemp].[sp_Prepare_Employee_Reload]"
+    ]
+  },
+  {
+    "id": "90e71de9-3b36-4758-b6ce-20fe90b09a66",
+    "name": "Pipe_Sync_EMPLOYEE_F_copy1",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / APP_SUPPORT_SYNC",
+    "description": "",
+    "sources": [
+      "WH_STAGING.dbo.EMPLOYEE_F"
+    ],
+    "targets": [
+      "DB_App_Support.xtemp.EMPLOYEE_F",
+      "SP: [xtemp].[sp_Prepare_Employee_Reload]"
+    ]
+  },
+  {
+    "id": "fa56c916-3818-4721-a84c-0abf2571e12d",
+    "name": "Pipe_Sync_EMPLOYEE_TITLE_CONTROL_0",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / APP_SUPPORT_SYNC",
+    "description": "",
+    "sources": [
+      "WH_STAGING.dbo.EMPLOYEE_TITLE_CONTROL_0"
+    ],
+    "targets": [
+      "DB_App_Support.xtemp.EMPLOYEE_TITLE_CONTROL_0",
+      "SP: [xtemp].[sp_Prepare_EMPLOYEE_TITLE_CONTROL_0_Reload]"
+    ]
+  },
+  {
+    "id": "b5f15d68-607c-4a4a-8c83-08b393658601",
+    "name": "Pipe_Sync_FLOORPLAN_ACTUALS (3 Tables)",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / APP_SUPPORT_SYNC",
+    "description": "",
+    "sources": [
+      "WH_STAGING.dbo.FLOORPLAN_ACTUALS_NER",
+      "WH_STAGING.dbo.FLOORPLAN_ACTUALS_RENT",
+      "WH_STAGING.dbo.FLOORPLAN_ACTUALS_RENT_AND_NER"
+    ],
+    "targets": [
+      "DB_App_Support.dbo.FLOORPLAN_ACTUALS_NER",
+      "DB_App_Support.dbo.FLOORPLAN_ACTUALS_RENT",
+      "DB_App_Support.dbo.FLOORPLAN_ACTUALS_RENT_AND_NER",
+      "SP: [dbo].[FLOORPLAN_ACTUALS_Prepare_SP]"
+    ]
+  },
+  {
+    "id": "648c08f9-9a9b-4afc-9e33-fac0f10e432f",
+    "name": "Pipe_Sync_FORECAST_BUDGET_TIERS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / APP_SUPPORT_SYNC",
+    "description": "copies from WH_STAGING.dbo to DB_APP_SUPPORT.dbo",
+    "sources": [
+      "WH_STAGING.dbo.FORECAST_BUDGET_TIERS"
+    ],
+    "targets": [
+      "DB_App_Support.dbo.FORECAST_BUDGET_TIERS"
+    ]
+  },
+  {
+    "id": "5199ecf3-b7ec-4551-9f76-8a67c376bb28",
+    "name": "Pipe_Sync_LEASE_RATE_TIERS_0",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / APP_SUPPORT_SYNC",
+    "description": "",
+    "sources": [
+      "WH_STAGING.dbo.LEASE_RATE_TIERS_0"
+    ],
+    "targets": [
+      "DB_App_Support.xtemp.LEASE_RATE_TIERS_0",
+      "SP: [xtemp].[sp_Prepare_LEASE_RATE_TIERS_0_Reload]"
+    ]
+  },
+  {
+    "id": "63bceab3-ed06-486e-8d47-0535d75b649b",
+    "name": "Pipe_Sync_PROPERTY_AY_0",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / APP_SUPPORT_SYNC",
+    "description": "Runs within PL_PROPERTY_MASTER_PROPERTY_AY",
+    "sources": [
+      "WH_STAGING.dbo.PROPERTY_AY_0"
+    ],
+    "targets": [
+      "DB_App_Support.xtemp.PROPERTY_AY_0",
+      "SP: [xtemp].[sp_Prepare_PROPERTY_AY_0_Reload]"
+    ]
+  },
+  {
+    "id": "f71a3952-cce4-497e-854e-396dd7fcc763",
+    "name": "Pipe_Sync_UNIT_OCCUPANCY_SNAPSHOT_0",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / APP_SUPPORT_SYNC",
+    "description": "",
+    "sources": [
+      "WH_STAGING.dbo.UNIT_OCCUPANCY_SNAPSHOT_0"
+    ],
+    "targets": [
+      "DB_App_Support.xtemp.UNIT_OCCUPANCY_SNAPSHOT_0",
+      "SP: [xtemp].[sp_Prepare_UNIT_OCCUPANCY_SNAPSHOT_0_Reload]"
+    ]
+  },
+  {
+    "id": "de2b2395-7e32-4f11-8f11-5d8157672f0b",
+    "name": "Pipe_Sync_ADAPTIVE_BUDGET_YR_RATE_WORKBOOK",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / WH_STAGING_SYNC",
+    "description": "",
+    "sources": [
+      "DB_App_Support.dbo.Adaptive_Budget_Yr_Rate_Workbook"
+    ],
+    "targets": [
+      "SP: [sync_tables].[sp_Prepare_ADAPTIVE_BUDGET_YR_RATE_WORKBOOK_Reload]",
+      "WH_STAGING.sync_tables.ADAPTIVE_BUDGET_YR_RATE_WORKBOOK"
+    ]
+  },
+  {
+    "id": "cb3a78b1-cd5a-47a9-b169-1ac4dd64a0f4",
+    "name": "Pipe_Sync_ADAPTIVE_RENT_IMPORT_SUMMARY_CUBE",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / WH_STAGING_SYNC",
+    "description": "",
+    "sources": [
+      "DB_App_Support.dbo.Adaptive_Rent_Import_Summary_Cube"
+    ],
+    "targets": [
+      "SP: [sync_tables].[sp_Prepare_ADAPTIVE_RENT_IMPORT_SUMMARY_CUBE_Reload]",
+      "WH_STAGING.sync_tables.ADAPTIVE_RENT_IMPORT_SUMMARY_CUBE"
+    ]
+  },
+  {
+    "id": "5c6fc0c8-413f-4b17-bd0f-30cc31e773d5",
+    "name": "Pipe_Sync_ADAPTIVE_WEEKLY_TRACKER_ASSUMPTIONS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / WH_STAGING_SYNC",
+    "description": "",
+    "sources": [
+      "DB_App_Support.dbo.Adaptive_Weekly_Tracker_Assumptions"
+    ],
+    "targets": [
+      "SP: [sync_tables].[sp_Prepare_ADAPTIVE_WEEKLY_TRACKER_ASSUMPTIONS_Reload]",
+      "WH_STAGING.sync_tables.ADAPTIVE_WEEKLY_TRACKER_ASSUMPTIONS"
+    ]
+  },
+  {
+    "id": "a76ea72b-a06e-456e-a8aa-d5c2ef1ed563",
+    "name": "Pipe_Sync_ADAPTIVE_WEEKLY_TRACKER_TARGETS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / WH_STAGING_SYNC",
+    "description": "",
+    "sources": [
+      "DB_App_Support.dbo.Adaptive_Weekly_Tracker_Targets"
+    ],
+    "targets": [
+      "SP: [sync_tables].[sp_Prepare_ADAPTIVE_WEEKLY_TRACKER_TARGETS_Reload]",
+      "WH_STAGING.sync_tables.ADAPTIVE_WEEKLY_TRACKER_TARGETS"
+    ]
+  },
+  {
+    "id": "025e1b60-5edd-449d-9d89-29b8ce3bf356",
+    "name": "Pipe_Sync_EMP_ENTRATA_TITLE_GROUP_MAPPING",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / WH_STAGING_SYNC",
+    "description": "",
+    "sources": [
+      "DB_App_Support.dbo.EMP_ENTRATA_TITLE_GROUP_MAPPING"
+    ],
+    "targets": [
+      "SP: [sync_tables].[sp_Prepare_EMP_ENTRATA_TITLE_GROUP_MAPPING_Reload]",
+      "WH_STAGING.sync_tables.EMP_ENTRATA_TITLE_GROUP_MAPPING"
+    ]
+  },
+  {
+    "id": "5cce8e99-c99e-4cdc-8716-7d233cfdf530",
+    "name": "Pipe_Sync_EMP_PROPERTY_ASSIGNMENTS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / WH_STAGING_SYNC",
+    "description": "",
+    "sources": [
+      "DB_App_Support.dbo.EMP_PROPERTY_ASSIGNMENTS"
+    ],
+    "targets": [
+      "SP: [sync_tables].[sp_Prepare_EMP_PROPERTY_ASSIGNMENTS_Reload]",
+      "WH_STAGING.sync_tables.EMP_PROPERTY_ASSIGNMENTS"
+    ]
+  },
+  {
+    "id": "2ab109ce-b4d7-4d08-bffa-9e2a495684e4",
+    "name": "Pipe_Sync_EMP_TITLE_GROUP_MGMT",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / WH_STAGING_SYNC",
+    "description": "",
+    "sources": [
+      "DB_App_Support.dbo.EMP_TITLE_GROUP_MGMT"
+    ],
+    "targets": [
+      "SP: [sync_tables].[sp_Prepare_EMP_TITLE_GROUP_MGMT_Reload]",
+      "WH_STAGING.sync_tables.EMP_TITLE_GROUP_MGMT"
+    ]
+  },
+  {
+    "id": "13c7ddff-00bd-4d56-a9d9-40029be826c7",
+    "name": "Pipe_Sync_EMP_TITLE_OVERRIDES",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / WH_STAGING_SYNC",
+    "description": "",
+    "sources": [
+      "DB_App_Support.dbo.EMP_TITLE_OVERRIDES"
+    ],
+    "targets": [
+      "SP: [sync_tables].[sp_Prepare_EMP_TITLE_OVERRIDES_Reload]",
+      "WH_STAGING.sync_tables.EMP_TITLE_OVERRIDES"
+    ]
+  },
+  {
+    "id": "8b3fc421-44e2-40da-a2c4-8e66c183e1e8",
+    "name": "Pipe_Sync_PROPERTY_METRICS_REFORECASTED_REVENUE_0",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / WH_STAGING_SYNC",
+    "description": "",
+    "sources": [
+      "DB_App_Support.dbo.Adaptive_Weekly_Tracker_Targets"
+    ],
+    "targets": [
+      "SP: [sync_tables].[sp_Prepare_ADAPTIVE_WEEKLY_TRACKER_TARGETS_Reload]",
+      "WH_STAGING.sync_tables.ADAPTIVE_WEEKLY_TRACKER_TARGETS"
+    ]
+  },
+  {
+    "id": "4ee26882-3e05-4df0-a5e1-396ebf72d353",
+    "name": "Pipe_Sync_SECURITY_LEVELS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / WH_STAGING_SYNC",
+    "description": "",
+    "sources": [
+      "DB_App_Support.dbo.SECURITY_LEVELS"
+    ],
+    "targets": [
+      "SP: [sync_tables].[sp_Prepare_SECURITY_LEVELS_Reload]",
+      "WH_STAGING.sync_tables.SECURITY_LEVELS"
+    ]
+  },
+  {
+    "id": "5b3d2464-b45f-4ee4-976c-961bbf9f9c59",
+    "name": "Pipe_Sync_SECURITY_LEVELS_BY_TITLE",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / WH_STAGING_SYNC",
+    "description": "",
+    "sources": [
+      "DB_App_Support.dbo.SECURITY_LEVELS_BY_TITLE"
+    ],
+    "targets": [
+      "SP: [sync_tables].[sp_Prepare_SECURITY_LEVELS_BY_TITLE_Reload]",
+      "WH_STAGING.sync_tables.SECURITY_LEVELS_BY_TITLE"
+    ]
+  },
+  {
+    "id": "b59e5370-b0f1-4a32-9ead-fcd5df50a70f",
+    "name": "PL_Sync_WH_STAGING_Tables",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / SYNC PROCESSES / WH_STAGING_SYNC",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "343d7927-dca0-4fce-b273-64d34f8303a0",
+    "name": "PL_Bronze_Entrata_Full_NEW",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 3 - Production / ENTRATA IMPORTS",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "5b53727c-0911-497f-88dd-9cb61f3027e2",
+    "name": "PL_Bronze_Entrata_Incremental_NEW",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 3 - Production / ENTRATA IMPORTS",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "LH_Bronze_Entrata.{'value': '@item().BronzeSchema', 'type': 'Expression'}.{'value': '@item().BronzeEntity', 'type': 'Expression'}"
+    ]
+  },
+  {
+    "id": "71532ce8-5982-42d4-bcdc-7b44477e1af6",
+    "name": "PL_Bronze_Entrata_to_WH_ODS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 3 - Production / ENTRATA IMPORTS",
+    "description": "Conform and copy the data from the Entrata Bronze Lakehouse into tables in WH_ODS.  These processes also add the expanded Date fields where needed for downstream processes.",
+    "sources": [],
+    "targets": [
+      "SP: @{item().SPECIFIC_SCHEMA}.@{item().SPECIFIC_NAME}"
+    ]
+  },
+  {
+    "id": "5992a556-4095-453d-9c8d-740aac522392",
+    "name": "PL_Orchestration",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 4 - Orchestration",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "83d56967-9717-48c2-9ea5-0756ef4db1cb",
+    "name": "PL_Orchestration_Master",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 4 - Orchestration",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "dbfd8b9e-d116-4ee2-af23-7bc2a6051983",
+    "name": "PL_Bronze_Entrata_Adhoc",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / Examples - Processing",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "LH_Bronze_Entrata.report.E_CACHED_APPLICATIONS"
+    ]
+  },
+  {
+    "id": "80d39436-ad49-4e5c-a0a3-0d960ac673e6",
+    "name": "PL_Bronze_Entrata_Full_OLD",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / Examples - Processing",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "c98b368a-7aac-431e-98b1-5415b8c869d6",
+    "name": "PL_Bronze_Entrata_Incremental_OLD",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / Examples - Processing",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "LH_Bronze_Entrata.{'value': '@item().BronzeSchema', 'type': 'Expression'}.{'value': '@item().BronzeEntity', 'type': 'Expression'}"
+    ]
+  },
+  {
+    "id": "cf4b84eb-87a5-4fb6-85ce-0c0908f2d3a4",
+    "name": "PL_Config_DataExploration",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / Examples - Processing",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "31c6ea2f-83c2-44ba-a02c-b23941d6b361",
+    "name": "PL_Config_RefreshSQLAnalyticsEndpoint",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / Examples - Processing",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "3cd35516-ab67-4663-b822-10299808a217",
+    "name": "PL_Gold_Full",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / Examples - Processing",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: @{item().SPECIFIC_SCHEMA}.@{item().SPECIFIC_NAME}"
+    ]
+  },
+  {
+    "id": "612d659a-ffe9-4664-9c86-99db29e19fe0",
+    "name": "PL_Silver_Full",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / Examples - Processing",
+    "description": "",
+    "sources": [],
+    "targets": [
+      "SP: @{item().SPECIFIC_SCHEMA}.@{item().SPECIFIC_NAME}"
+    ]
+  }
+]

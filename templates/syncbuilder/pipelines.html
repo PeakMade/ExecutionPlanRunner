@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header flex items-center gap-3">
+  <a href="{{ url_for('syncbuilder.index') }}" class="btn btn-secondary btn-sm btn-icon">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <div>
+    <h1>Pipelines</h1>
+    <div class="subtitle">All DataPipeline items in the Fabric workspace</div>
+  </div>
+</div>
+
+{% if error %}
+<div class="alert alert-danger mb-4">
+  <i class="bi bi-exclamation-triangle"></i> {{ error }}
+</div>
+{% endif %}
+
+<div class="card">
+  <div class="card-header flex justify-between items-center">
+    <span><i class="bi bi-diagram-3"></i> Workspace Pipelines ({{ pipelines|length }})</span>
+    <input type="text" id="search-input" class="form-control" style="width:240px;"
+           placeholder="Search pipelines…" oninput="filterTable()">
+  </div>
+  <div class="table-wrap">
+    <table class="data-table" id="pipe-table">
+      <thead>
+        <tr>
+          <th>Pipeline Name</th>
+          <th style="width:320px;">ID</th>
+          <th style="width:100px; text-align:right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if pipelines %}
+          {% for name, pid in pipelines %}
+          <tr data-name="{{ name | lower }}">
+            <td class="font-bold">{{ name }}</td>
+            <td><code class="text-xs text-muted">{{ pid }}</code></td>
+            <td style="text-align:right;">
+              <button class="btn btn-secondary btn-sm"
+                      onclick="inspectPipeline('{{ name | replace("'", "\\'") }}')">
+                <i class="bi bi-braces"></i> Inspect JSON
+              </button>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="3" style="text-align:center; padding:2rem; color:var(--text-muted);">
+              No pipelines found in workspace.
+            </td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- JSON modal -->
+<div id="json-modal" class="modal-backdrop" style="display:none;" onclick="closeModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="flex justify-between items-center mb-3">
+      <div class="modal-title" id="modal-title">Pipeline JSON</div>
+      <div class="flex gap-2">
+        <button class="btn btn-secondary btn-sm btn-icon" onclick="copyModalJson()" title="Copy">
+          <i class="bi bi-clipboard" id="modal-copy-icon"></i>
+        </button>
+        <button class="btn btn-secondary btn-sm btn-icon" onclick="document.getElementById('json-modal').style.display='none'">
+          <i class="bi bi-x-lg"></i>
+        </button>
+      </div>
+    </div>
+    <pre class="code-block" id="modal-json" style="height:420px; overflow-y:auto;">Loading…</pre>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const INSPECT_BASE = "{{ url_for('syncbuilder.api_inspect', pipeline_name='__N__') }}".replace('__N__','');
+
+function filterTable() {
+  const q = document.getElementById('search-input').value.trim().toLowerCase();
+  document.querySelectorAll('#pipe-table tbody tr').forEach(tr => {
+    tr.style.display = (!q || (tr.dataset.name || '').includes(q)) ? '' : 'none';
+  });
+}
+
+function inspectPipeline(name) {
+  document.getElementById('modal-title').textContent = name;
+  document.getElementById('modal-json').textContent   = 'Loading…';
+  document.getElementById('json-modal').style.display = '';
+  fetch(INSPECT_BASE + encodeURIComponent(name))
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) { document.getElementById('modal-json').textContent = 'Error: ' + data.error; return; }
+      document.getElementById('modal-json').textContent = JSON.stringify(data.definition, null, 2);
+    })
+    .catch(e => { document.getElementById('modal-json').textContent = 'Error: ' + e.message; });
+}
+
+function closeModal(e) {
+  if (e.target === document.getElementById('json-modal'))
+    document.getElementById('json-modal').style.display = 'none';
+}
+
+function copyModalJson() {
+  const text = document.getElementById('modal-json').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const ic = document.getElementById('modal-copy-icon');
+    ic.className = 'bi bi-clipboard-check';
+    setTimeout(() => ic.className = 'bi bi-clipboard', 1500);
+  });
+}
+</script>
+{% endblock %}

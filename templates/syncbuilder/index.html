@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header flex justify-between items-center">
+  <div>
+    <h1>SyncBuilder</h1>
+    <div class="subtitle">Build and deploy Fabric Copy pipelines</div>
+  </div>
+  <a href="{{ url_for('syncbuilder.pipelines') }}" class="btn btn-secondary btn-sm">
+    <i class="bi bi-list-ul"></i> All Pipelines
+  </a>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; align-items:start;">
+
+  <!-- Build form -->
+  <div>
+    <div class="card mb-4">
+      <div class="card-header"><i class="bi bi-box-arrow-in-right"></i> Source</div>
+      <div class="card-body" style="display:flex; flex-direction:column; gap:0.75rem;">
+        <div>
+          <label class="form-label">Database</label>
+          <select id="src-db" class="form-select" onchange="loadSchemas('src')">
+            <option value="">— select —</option>
+            {% for db in db_keys %}
+            <option value="{{ db }}">{{ db }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Schema</label>
+          <select id="src-schema" class="form-select" onchange="loadTables('src')" disabled>
+            <option value="">— select database first —</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Table</label>
+          <select id="src-table" class="form-select" disabled>
+            <option value="">— select schema first —</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-4">
+      <div class="card-header"><i class="bi bi-box-arrow-right"></i> Target</div>
+      <div class="card-body" style="display:flex; flex-direction:column; gap:0.75rem;">
+        <div>
+          <label class="form-label">Database</label>
+          <select id="tgt-db" class="form-select" onchange="loadSchemas('tgt')">
+            <option value="">— select —</option>
+            {% for db in db_keys %}
+            <option value="{{ db }}">{{ db }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Schema</label>
+          <select id="tgt-schema" class="form-select" onchange="loadTables('tgt')" disabled>
+            <option value="">— select database first —</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label">Table</label>
+          <input type="text" id="tgt-table" class="form-control"
+                 placeholder="Enter target table name" oninput="updatePipelineName()">
+          <div class="text-xs text-muted mt-1">
+            Target table will be created if it does not exist (auto-create).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><i class="bi bi-gear"></i> Pipeline</div>
+      <div class="card-body" style="display:flex; flex-direction:column; gap:0.75rem;">
+        <div>
+          <label class="form-label">Pipeline Name</label>
+          <input type="text" id="pipeline-name" class="form-control"
+                 placeholder="Auto-generated or enter manually">
+        </div>
+
+        <div id="build-error" class="alert alert-danger" style="display:none;"></div>
+        <div id="build-success" class="alert alert-success" style="display:none;"></div>
+
+        <div class="flex gap-2 justify-end" style="padding-top:0.5rem; border-top:1px solid var(--border);">
+          <button class="btn btn-secondary" onclick="previewPipeline()">
+            <i class="bi bi-eye"></i> Preview JSON
+          </button>
+          <button class="btn btn-primary" id="deploy-btn" onclick="deployPipeline()">
+            <i class="bi bi-cloud-upload"></i> Build &amp; Deploy
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview / output panel -->
+  <div>
+    <div class="card" style="position:sticky; top:calc(var(--topbar-h) + 1rem);">
+      <div class="card-header flex justify-between items-center">
+        <span><i class="bi bi-braces"></i> Pipeline JSON Preview</span>
+        <button class="btn btn-secondary btn-sm btn-icon" onclick="copyJson()" title="Copy to clipboard">
+          <i class="bi bi-clipboard" id="copy-icon"></i>
+        </button>
+      </div>
+      <div class="card-body" style="padding:0.5rem;">
+        <pre class="code-block" id="json-preview" style="height:520px; overflow-y:auto;">
+<span class="log-dim">Configure source and target, then click Preview.</span>
+        </pre>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const URLS = {
+  schemas: "{{ url_for('syncbuilder.api_schemas') }}",
+  tables:  "{{ url_for('syncbuilder.api_tables') }}",
+  preview: "{{ url_for('syncbuilder.api_preview') }}",
+  build:   "{{ url_for('syncbuilder.api_build') }}",
+};
+
+function getVal(id) { return document.getElementById(id).value.trim(); }
+
+// ── Cascading dropdowns ────────────────────────────────────────────────────────
+function loadSchemas(side) {
+  const db      = getVal(`${side}-db`);
+  const schemSel = document.getElementById(`${side}-schema`);
+  const tblSel   = side === 'src' ? document.getElementById('src-table') : null;
+  schemSel.innerHTML = '<option value="">Loading…</option>'; schemSel.disabled = true;
+  if (tblSel) { tblSel.innerHTML = '<option value="">—</option>'; tblSel.disabled = true; }
+  if (!db) { schemSel.innerHTML = '<option value="">— select database first —</option>'; return; }
+  fetch(URLS.schemas + '?db=' + encodeURIComponent(db))
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) { schemSel.innerHTML = `<option value="">${data.error}</option>`; return; }
+      schemSel.innerHTML = '<option value="">— select schema —</option>' +
+        data.schemas.map(s => `<option value="${s}">${s}</option>`).join('');
+      schemSel.disabled = false;
+    });
+}
+
+function loadTables(side) {
+  const db     = getVal(`${side}-db`);
+  const schema = getVal(`${side}-schema`);
+  if (side !== 'src') { updatePipelineName(); return; }
+  const tblSel = document.getElementById('src-table');
+  tblSel.innerHTML = '<option value="">Loading…</option>'; tblSel.disabled = true;
+  if (!db || !schema) { tblSel.innerHTML = '<option value="">— select schema first —</option>'; return; }
+  fetch(URLS.tables + '?db=' + encodeURIComponent(db) + '&schema=' + encodeURIComponent(schema))
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) { tblSel.innerHTML = `<option value="">${data.error}</option>`; return; }
+      tblSel.innerHTML = '<option value="">— select table —</option>' +
+        data.tables.map(t => `<option value="${t}">${t}</option>`).join('');
+      tblSel.disabled = false;
+    });
+  updatePipelineName();
+}
+
+document.getElementById('src-table').addEventListener('change', updatePipelineName);
+
+function updatePipelineName() {
+  const srcDb    = getVal('src-db');
+  const srcSch   = getVal('src-schema');
+  const srcTbl   = getVal('src-table');
+  const tgtDb    = getVal('tgt-db');
+  const tgtSch   = getVal('tgt-schema');
+  const tgtTbl   = getVal('tgt-table');
+  const nameEl   = document.getElementById('pipeline-name');
+  if (srcTbl && tgtTbl && !nameEl.dataset.userEdited) {
+    nameEl.value = `Copy_${srcTbl}_to_${tgtTbl}`;
+  }
+}
+
+document.getElementById('pipeline-name').addEventListener('input', function() {
+  this.dataset.userEdited = this.value ? '1' : '';
+});
+
+// ── Helpers ────────────────────────────────────────────────────────────────────
+function buildPayload() {
+  const srcDb  = getVal('src-db');
+  const srcSch = getVal('src-schema');
+  const srcTbl = getVal('src-table');
+  const tgtDb  = getVal('tgt-db');
+  const tgtSch = getVal('tgt-schema');
+  const tgtTbl = getVal('tgt-table');
+  const name   = getVal('pipeline-name');
+  if (!srcDb || !srcSch || !srcTbl) return [null, 'Please select source database, schema, and table.'];
+  if (!tgtDb || !tgtSch || !tgtTbl) return [null, 'Please select target database, schema, and enter table name.'];
+  if (!name)                         return [null, 'Pipeline name is required.'];
+  return [{
+    source:        `${srcDb}.${srcSch}.${srcTbl}`,
+    target:        `${tgtDb}.${tgtSch}.${tgtTbl}`,
+    pipeline_name: name,
+  }, null];
+}
+
+function showError(msg) {
+  const el = document.getElementById('build-error');
+  el.textContent = msg; el.style.display = msg ? '' : 'none';
+  document.getElementById('build-success').style.display = 'none';
+}
+
+function showSuccess(msg) {
+  const el = document.getElementById('build-success');
+  el.textContent = msg; el.style.display = msg ? '' : 'none';
+  document.getElementById('build-error').style.display = 'none';
+}
+
+// ── Preview ────────────────────────────────────────────────────────────────────
+function previewPipeline() {
+  const [payload, err] = buildPayload();
+  if (err) { showError(err); return; }
+  showError('');
+  document.getElementById('json-preview').textContent = 'Loading…';
+  fetch(URLS.preview, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload),
+  }).then(r => r.json()).then(data => {
+    if (data.error) { showError(data.error); document.getElementById('json-preview').textContent = ''; return; }
+    document.getElementById('json-preview').textContent = JSON.stringify(data.definition, null, 2);
+  }).catch(e => { showError(e.message); });
+}
+
+// ── Deploy ─────────────────────────────────────────────────────────────────────
+function deployPipeline() {
+  const [payload, err] = buildPayload();
+  if (err) { showError(err); return; }
+  showError('');
+  const btn = document.getElementById('deploy-btn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Deploying…';
+  fetch(URLS.build, {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify(payload),
+  }).then(r => r.json()).then(data => {
+    btn.disabled = false; btn.innerHTML = '<i class="bi bi-cloud-upload"></i> Build &amp; Deploy';
+    if (data.error) { showError(data.error); return; }
+    showSuccess(`Pipeline "${data.name}" ${data.action} successfully. ID: ${data.id}`);
+  }).catch(e => {
+    btn.disabled = false; btn.innerHTML = '<i class="bi bi-cloud-upload"></i> Build &amp; Deploy';
+    showError(e.message);
+  });
+}
+
+// ── Copy JSON ──────────────────────────────────────────────────────────────────
+function copyJson() {
+  const text = document.getElementById('json-preview').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const ic = document.getElementById('copy-icon');
+    ic.className = 'bi bi-clipboard-check';
+    setTimeout(() => ic.className = 'bi bi-clipboard', 1500);
+  });
+}
+</script>
+{% endblock %}

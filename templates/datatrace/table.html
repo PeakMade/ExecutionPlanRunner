@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex items-center gap-2 mb-4 text-sm text-muted">
+  <a href="{{ url_for('datatrace.index') }}">Catalog</a>
+  <span>›</span>
+  <span>{{ table_name }}</span>
+</div>
+
+<div class="page-header">
+  <h1><i class="bi bi-table"></i> {{ table_name }}</h1>
+  <div class="subtitle">Table lineage — upstream producers and downstream consumers</div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+
+  <!-- Upstream -->
+  <div class="card">
+    <div class="card-header" style="color:#56d364;">
+      <i class="bi bi-arrow-up-circle-fill"></i>
+      Upstream — SPs that write to this table
+      <span class="badge badge-green" style="margin-left:0.5rem;">{{ producers|length }}</span>
+    </div>
+    {% if producers %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr><th>SP Name</th><th>Strategy</th><th>Sources</th><th>Cross-DB</th></tr>
+        </thead>
+        <tbody>
+          {% for p in producers %}
+          <tr>
+            <td><a href="{{ url_for('datatrace.detail', name=p.name) }}">{{ p.name }}</a></td>
+            <td><span class="badge badge-teal">{{ p.load_strategy }}</span></td>
+            <td style="font-size:0.78rem;">
+              {% for s in p.sources %}
+              <a href="{{ url_for('datatrace.table_usage', table_name=s) }}" style="display:block;">{{ s }}</a>
+              {% endfor %}
+            </td>
+            <td style="text-align:center;">
+              {% if p.cross_db %}<span class="badge badge-amber">Yes</span>{% else %}—{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="card-body">
+      <span class="text-muted">No SPs in the catalog write to this table.</span>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Downstream -->
+  <div class="card">
+    <div class="card-header" style="color:#79c0ff;">
+      <i class="bi bi-arrow-down-circle-fill"></i>
+      Downstream — SPs that read from this table
+      <span class="badge badge-blue" style="margin-left:0.5rem;">{{ consumers|length }}</span>
+    </div>
+    {% if consumers %}
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr><th>SP Name</th><th>Strategy</th><th>Targets</th><th>Cross-DB</th></tr>
+        </thead>
+        <tbody>
+          {% for p in consumers %}
+          <tr>
+            <td><a href="{{ url_for('datatrace.detail', name=p.name) }}">{{ p.name }}</a></td>
+            <td><span class="badge badge-teal">{{ p.load_strategy }}</span></td>
+            <td style="font-size:0.78rem;">
+              {% for t in p.targets %}
+              <a href="{{ url_for('datatrace.table_usage', table_name=t) }}" style="display:block;">{{ t }}</a>
+              {% endfor %}
+            </td>
+            <td style="text-align:center;">
+              {% if p.cross_db %}<span class="badge badge-amber">Yes</span>{% else %}—{% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="card-body">
+      <span class="text-muted">No SPs in the catalog read from this table.</span>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,1356 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fabric Administration — Mockup</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+/* ── Design tokens ──────────────────────────────────────────────── */
+:root {
+  --bg-base:        #0d0f18;
+  --bg-surface:     #151929;
+  --bg-elevated:    #1c2035;
+  --bg-hover:       #222740;
+  --border:         #2a2f4a;
+  --accent:         #4f6ef7;
+  --accent-hover:   #3d5ce0;
+  --accent-glow:    rgba(79,110,247,.25);
+  --green:          #22c55e;
+  --green-glow:     rgba(34,197,94,.25);
+  --amber:          #f59e0b;
+  --red:            #ef4444;
+  --text-primary:   #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted:     #4a5568;
+  --sidebar-w:      220px;
+  --topbar-h:       54px;
+}
+
+/* ── Reset / base ────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: .92rem;
+  min-height: 100vh;
+}
+
+/* ── Mockup screen switcher ─────────────────────────────────────── */
+#screen-picker {
+  position: fixed;
+  bottom: 16px; right: 16px;
+  z-index: 9999;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.6);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+#screen-picker .label {
+  font-size: .65rem;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+#screen-picker button {
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: .75rem;
+  padding: 5px 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: all .15s;
+  white-space: nowrap;
+}
+#screen-picker button:hover,
+#screen-picker button.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ── Top nav bar ─────────────────────────────────────────────────── */
+.topbar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--topbar-h);
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  z-index: 100;
+  gap: 16px;
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text-primary);
+  text-decoration: none;
+  letter-spacing: .02em;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.topbar-brand .brand-icon {
+  width: 30px; height: 30px;
+  background: linear-gradient(135deg, #4f6ef7, #7c3aed);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(79,110,247,.4);
+}
+.topbar-brand .brand-sub {
+  font-size: .67rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  display: block;
+  line-height: 1;
+}
+.topbar-divider { width: 1px; height: 24px; background: var(--border); }
+.topbar-app-label { font-size: .78rem; color: var(--text-secondary); letter-spacing: .04em; }
+.topbar-spacer { flex: 1; }
+.topbar-actions { display: flex; align-items: center; gap: 10px; }
+.topbar-btn {
+  background: none; border: none;
+  color: var(--text-secondary);
+  font-size: 1.1rem; cursor: pointer;
+  padding: 5px 7px; border-radius: 6px;
+  transition: all .15s;
+  display: flex; align-items: center;
+}
+.topbar-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+.topbar-user { display: flex; align-items: center; gap: 8px; font-size: .8rem; color: var(--text-secondary); }
+.topbar-avatar {
+  width: 30px; height: 30px;
+  background: linear-gradient(135deg, #4f6ef7, #7c3aed);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; font-weight: 700; color: #fff;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────────────── */
+.sidebar {
+  position: fixed;
+  top: var(--topbar-h); left: 0;
+  width: var(--sidebar-w); bottom: 0;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  padding: 12px 0;
+  overflow-y: auto;
+  z-index: 50;
+}
+.sidebar-section-label {
+  font-size: .64rem;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+  color: var(--text-muted);
+  padding: 10px 16px 4px;
+  margin-top: 4px;
+}
+.sidebar-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 16px;
+  color: var(--text-secondary);
+  font-size: .83rem;
+  cursor: pointer;
+  border-left: 3px solid transparent;
+  transition: all .15s;
+  text-decoration: none;
+}
+.sidebar-item:hover { background: var(--bg-hover); color: var(--text-primary); }
+.sidebar-item.active {
+  background: var(--bg-hover);
+  color: var(--accent);
+  border-left-color: var(--accent);
+  font-weight: 600;
+}
+.sidebar-item i { font-size: 1rem; flex-shrink: 0; }
+.sidebar-badge {
+  margin-left: auto;
+  background: var(--green); color: #000;
+  font-size: .62rem; font-weight: 700;
+  border-radius: 20px; padding: 1px 7px;
+  letter-spacing: .04em;
+}
+.sidebar-footer { margin-top: auto; padding: 12px 0; border-top: 1px solid var(--border); }
+
+/* ── App icon gradients ──────────────────────────────────────────── */
+/* Large square icons for dashboard cards */
+.app-icon-lg {
+  width: 72px; height: 72px;
+  border-radius: 18px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  position: relative;
+  overflow: hidden;
+}
+.app-icon-lg::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.12) 0%, transparent 60%);
+  border-radius: inherit;
+}
+.grad-blue-indigo   { background: linear-gradient(135deg, #3b82f6, #6366f1); color: #fff; box-shadow: 0 4px 20px rgba(99,102,241,.4); }
+.grad-green-teal    { background: linear-gradient(135deg, #22c55e, #0891b2); color: #fff; box-shadow: 0 4px 20px rgba(34,197,94,.35); }
+.grad-purple-pink   { background: linear-gradient(135deg, #a855f7, #ec4899); color: #fff; box-shadow: 0 4px 20px rgba(168,85,247,.4); }
+.grad-amber-orange  { background: linear-gradient(135deg, #f59e0b, #ef4444); color: #fff; box-shadow: 0 4px 20px rgba(245,158,11,.35); }
+.grad-cyan-blue     { background: linear-gradient(135deg, #06b6d4, #3b82f6); color: #fff; box-shadow: 0 4px 20px rgba(6,182,212,.35); }
+.grad-rose-amber    { background: linear-gradient(135deg, #f43f5e, #f59e0b); color: #fff; box-shadow: 0 4px 20px rgba(244,63,94,.35); }
+
+/* Small sidebar/breadcrumb icons */
+.app-icon-sm {
+  width: 28px; height: 28px;
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem;
+  flex-shrink: 0;
+}
+
+/* Medium icons for settings list */
+.app-icon-md {
+  width: 48px; height: 48px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  box-shadow: 0 2px 10px rgba(0,0,0,.3);
+  position: relative; overflow: hidden;
+}
+.app-icon-md::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,.12) 0%, transparent 60%);
+  border-radius: inherit;
+}
+
+/* ── Main content area ───────────────────────────────────────────── */
+.main { margin-left: var(--sidebar-w); margin-top: var(--topbar-h); padding: 28px 32px; min-height: calc(100vh - var(--topbar-h)); }
+
+/* ── Page header ─────────────────────────────────────────────────── */
+.page-header { margin-bottom: 24px; }
+.page-title { font-size: 1.4rem; font-weight: 700; color: var(--text-primary); margin: 0 0 4px; }
+.page-subtitle { font-size: .83rem; color: var(--text-secondary); margin: 0; }
+
+/* ── Cards ───────────────────────────────────────────────────────── */
+.card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; }
+.card-header {
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--border);
+  border-left: 4px solid var(--accent);
+  padding: 10px 16px;
+  font-size: .73rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: #a5b4fc;
+  border-radius: 10px 10px 0 0 !important;
+}
+.card-body { padding: 20px; }
+
+/* ── App cards (hub dashboard) ───────────────────────────────────── */
+.app-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all .22s;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+.app-card:hover {
+  border-color: rgba(255,255,255,.15);
+  background: var(--bg-elevated);
+  box-shadow: 0 8px 32px rgba(0,0,0,.4), 0 0 0 1px rgba(255,255,255,.06);
+  transform: translateY(-3px);
+}
+
+/* Colourful banner strip at top of each card */
+.app-card-banner {
+  height: 6px;
+  border-radius: 14px 14px 0 0;
+}
+.banner-blue-indigo  { background: linear-gradient(90deg, #3b82f6, #6366f1); }
+.banner-green-teal   { background: linear-gradient(90deg, #22c55e, #0891b2); }
+.banner-purple-pink  { background: linear-gradient(90deg, #a855f7, #ec4899); }
+.banner-amber-orange { background: linear-gradient(90deg, #f59e0b, #ef4444); }
+
+.app-card-body { padding: 20px; display: flex; flex-direction: column; gap: 14px; flex: 1; }
+
+.app-card-top { display: flex; align-items: flex-start; gap: 16px; }
+.app-card-text { flex: 1; min-width: 0; }
+.app-card-name { font-size: .97rem; font-weight: 700; color: var(--text-primary); margin: 0 0 4px; }
+.app-card-desc { font-size: .8rem; color: var(--text-secondary); margin: 0; line-height: 1.5; }
+
+.app-card-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+.app-status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); display: inline-block; margin-right: 5px; }
+.app-status-text { font-size: .72rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
+.app-launch-btn { font-size: .75rem; color: var(--accent); display: flex; align-items: center; gap: 4px; }
+
+/* ── Stat strip ──────────────────────────────────────────────────── */
+.stat-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 28px; }
+.stat-box { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+.stat-label { font-size: .67rem; text-transform: uppercase; letter-spacing: .1em; color: var(--text-muted); margin-bottom: 6px; }
+.stat-value { font-size: 1.6rem; font-weight: 700; color: var(--text-primary); line-height: 1; }
+.stat-value.green { color: var(--green); }
+.stat-value.accent { color: var(--accent); }
+.stat-sub { font-size: .71rem; color: var(--text-muted); margin-top: 4px; }
+
+/* ── Forms ───────────────────────────────────────────────────────── */
+.form-label { font-size: .72rem; text-transform: uppercase; letter-spacing: .07em; color: var(--text-secondary); margin-bottom: 5px; font-weight: 600; }
+.form-control, .form-select {
+  background: #0d0f18; border: 1px solid var(--border);
+  color: var(--text-primary); border-radius: 7px;
+  padding: 8px 12px; font-size: .88rem;
+}
+.form-control:focus, .form-select:focus {
+  background: #0d0f18; border-color: var(--accent);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+.form-select option { background: #1c2035; }
+.input-hint { font-size: .72rem; color: var(--text-muted); margin-top: 4px; }
+.form-check-input { background-color: var(--bg-hover); border-color: var(--border); }
+.form-check-input:checked { background-color: var(--accent); border-color: var(--accent); }
+
+/* ── Buttons ─────────────────────────────────────────────────────── */
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; border-radius: 7px; font-size: .85rem; padding: 8px 20px; }
+.btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
+.btn-outline-secondary { background: none; border: 1px solid var(--border); color: var(--text-secondary); border-radius: 7px; font-size: .85rem; padding: 8px 20px; }
+.btn-outline-secondary:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--text-muted); }
+.btn-success { background: var(--green); border-color: var(--green); color: #000; font-weight: 700; border-radius: 7px; font-size: .92rem; padding: 9px 28px; }
+.btn-success:hover { background: #16a34a; border-color: #16a34a; color: #000; }
+.btn-ghost { background: none; border: 1px solid var(--border); color: var(--text-secondary); border-radius: 7px; font-size: .8rem; padding: 5px 12px; cursor: pointer; transition: all .15s; }
+.btn-ghost:hover { background: var(--bg-hover); color: var(--text-primary); }
+.btn-danger-ghost { background: none; border: 1px solid rgba(239,68,68,.3); color: #f87171; border-radius: 7px; font-size: .8rem; padding: 5px 12px; cursor: pointer; transition: all .15s; }
+.btn-danger-ghost:hover { background: rgba(239,68,68,.1); border-color: var(--red); }
+
+/* ── Tables ──────────────────────────────────────────────────────── */
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { font-size: .67rem; text-transform: uppercase; letter-spacing: .1em; color: var(--text-muted); font-weight: 600; padding: 10px 14px; border-bottom: 1px solid var(--border); text-align: left; white-space: nowrap; }
+.data-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: .84rem; color: var(--text-primary); vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--bg-elevated); }
+.mono { font-family: 'Cascadia Code', 'Consolas', monospace; font-size: .82rem; }
+.badge-type { font-size: .67rem; font-weight: 700; letter-spacing: .06em; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; }
+.badge-dw   { background: rgba(79,110,247,.2);  color: #818cf8; }
+.badge-sql  { background: rgba(14,165,233,.2);  color: #38bdf8; }
+.badge-ok   { background: rgba(34,197,94,.15);  color: #4ade80; }
+.badge-warn { background: rgba(245,158,11,.15); color: #fbbf24; }
+
+/* ── Preview panel ───────────────────────────────────────────────── */
+.preview-panel {
+  background: #090b12; border: 1px solid var(--border); border-radius: 8px;
+  padding: 16px; font-family: 'Cascadia Code','Consolas',monospace;
+  font-size: .78rem; color: #a5b4fc; white-space: pre; overflow-x: auto; line-height: 1.6;
+}
+.preview-panel .key   { color: #7dd3fc; }
+.preview-panel .str   { color: #86efac; }
+.preview-panel .num   { color: #fca5a5; }
+.preview-panel .punct { color: var(--text-muted); }
+
+/* ── Breadcrumb ──────────────────────────────────────────────────── */
+.breadcrumb { display: flex; align-items: center; gap: 6px; font-size: .76rem; color: var(--text-muted); margin-bottom: 18px; padding: 0; list-style: none; background: none; }
+.breadcrumb a { color: var(--text-secondary); text-decoration: none; cursor: pointer; }
+.breadcrumb a:hover { color: var(--accent); }
+.breadcrumb .sep { color: var(--text-muted); }
+.breadcrumb .current { color: var(--text-primary); }
+
+/* ── Section divider ─────────────────────────────────────────────── */
+.section-divider { border: none; border-top: 1px solid var(--border); margin: 22px 0; }
+
+/* ── Settings list row ───────────────────────────────────────────── */
+.settings-app-row {
+  display: flex; align-items: center; gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  transition: background .15s;
+}
+.settings-app-row:last-child { border-bottom: none; }
+.settings-app-row:hover { background: var(--bg-elevated); }
+.settings-app-info { flex: 1; min-width: 0; }
+.settings-app-name { font-size: .92rem; font-weight: 600; color: var(--text-primary); margin: 0 0 2px; }
+.settings-app-meta { font-size: .76rem; color: var(--text-muted); margin: 0; }
+.settings-app-actions { display: flex; gap: 8px; align-items: center; }
+
+/* ── Icon grid picker ────────────────────────────────────────────── */
+.icon-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+.icon-opt {
+  aspect-ratio: 1;
+  border-radius: 10px;
+  background: var(--bg-elevated);
+  border: 2px solid transparent;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: all .15s;
+  color: var(--text-secondary);
+}
+.icon-opt:hover { border-color: var(--accent); color: var(--text-primary); }
+.icon-opt.selected { border-color: var(--accent); background: rgba(79,110,247,.15); color: var(--accent); }
+
+/* ── Gradient picker ─────────────────────────────────────────────── */
+.grad-picker { display: flex; flex-wrap: wrap; gap: 10px; }
+.grad-opt {
+  width: 48px; height: 48px; border-radius: 12px;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: all .15s;
+  box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  position: relative; overflow: hidden;
+}
+.grad-opt::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,.15) 0%, transparent 60%); }
+.grad-opt.selected { border-color: #fff; box-shadow: 0 0 0 2px var(--accent), 0 2px 8px rgba(0,0,0,.3); }
+.grad-opt:hover { transform: scale(1.08); }
+
+/* ── Upload zone ─────────────────────────────────────────────────── */
+.upload-zone {
+  border: 2px dashed var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: .82rem;
+  cursor: pointer;
+  transition: all .15s;
+}
+.upload-zone:hover { border-color: var(--accent); color: var(--text-secondary); background: rgba(79,110,247,.04); }
+.upload-zone i { font-size: 2rem; display: block; margin-bottom: 6px; color: var(--text-muted); }
+
+/* ── Toggle switch ───────────────────────────────────────────────── */
+.toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.toggle-row:last-child { border-bottom: none; padding-bottom: 0; }
+.toggle-label { font-size: .87rem; color: var(--text-primary); font-weight: 500; }
+.toggle-desc { font-size: .75rem; color: var(--text-muted); margin-top: 2px; }
+.form-switch .form-check-input { width: 2.4em; height: 1.3em; cursor: pointer; }
+
+/* ── Screens ─────────────────────────────────────────────────────── */
+.screen { display: none; }
+.screen.active { display: block; }
+</style>
+</head>
+<body>
+
+<!-- TOP NAV BAR -->
+<nav class="topbar">
+  <div class="topbar-brand" onclick="showScreen('home')">
+    <div class="brand-icon"><i class="bi bi-hexagon-fill"></i></div>
+    <div>Fabric Administration<span class="brand-sub">Internal Tools Hub</span></div>
+  </div>
+  <div class="topbar-divider"></div>
+  <span class="topbar-app-label" id="topbar-context">Dashboard</span>
+  <div class="topbar-spacer"></div>
+  <div class="topbar-actions">
+    <button class="topbar-btn" title="Toggle theme"><i class="bi bi-moon-stars"></i></button>
+    <button class="topbar-btn" title="Notifications"><i class="bi bi-bell"></i></button>
+    <div class="topbar-user">
+      <div class="topbar-avatar">CP</div>
+      <span>cpell</span>
+    </div>
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<nav class="sidebar" id="sidebar">
+  <span class="sidebar-section-label">Hub</span>
+  <a class="sidebar-item active" id="nav-home" onclick="showScreen('home')">
+    <i class="bi bi-grid-1x2"></i> Dashboard
+  </a>
+
+  <span class="sidebar-section-label">Apps</span>
+  <a class="sidebar-item" id="nav-dwh" onclick="showScreen('dwh')">
+    <i class="bi bi-database"></i> DataTrace
+  </a>
+  <a class="sidebar-item" id="nav-plan" onclick="showScreen('plan')">
+    <i class="bi bi-play-circle"></i> LoadRunner
+  </a>
+  <a class="sidebar-item" id="nav-pipeline" onclick="showScreen('pipeline')">
+    <i class="bi bi-bezier2"></i> SyncBuilder
+    <span class="sidebar-badge">New</span>
+  </a>
+
+  <span class="sidebar-section-label">Admin</span>
+  <a class="sidebar-item" id="nav-register" onclick="showScreen('register')">
+    <i class="bi bi-plus-square"></i> Add New App
+  </a>
+  <a class="sidebar-item" id="nav-settings" onclick="showScreen('settings')">
+    <i class="bi bi-sliders"></i> Settings
+  </a>
+
+  <div class="sidebar-footer">
+    <a class="sidebar-item"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 1 — HUB DASHBOARD
+════════════════════════════════════════════════════ -->
+<main class="main screen active" id="screen-home">
+  <div class="page-header">
+    <h1 class="page-title">Dashboard</h1>
+    <p class="page-subtitle">Select an app below, or use the sidebar to navigate.</p>
+  </div>
+
+  <div class="stat-strip">
+    <div class="stat-box">
+      <div class="stat-label">Apps Registered</div>
+      <div class="stat-value accent">3</div>
+      <div class="stat-sub">1 added recently</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Last Plan Run</div>
+      <div class="stat-value" style="font-size:1.1rem;padding-top:4px">Today 09:14</div>
+      <div class="stat-sub">22 steps — completed</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">SPs Catalogued</div>
+      <div class="stat-value accent">47</div>
+      <div class="stat-sub">DataTrace</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-label">Pipelines in Workspace</div>
+      <div class="stat-value green">12</div>
+      <div class="stat-sub">Fabric ETL Workspace</div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <!-- DataTrace -->
+    <div class="col-md-4">
+      <a class="app-card" onclick="showScreen('dwh')">
+        <div class="app-card-banner banner-blue-indigo"></div>
+        <div class="app-card-body">
+          <div class="app-card-top">
+            <div class="app-icon-lg grad-blue-indigo"><i class="bi bi-database-fill"></i></div>
+            <div class="app-card-text">
+              <p class="app-card-name">DataTrace</p>
+              <p class="app-card-desc">Catalog and visualize WH_STAGING stored procedures, data flow chains, and dependencies.</p>
+            </div>
+          </div>
+          <div class="app-card-footer">
+            <span class="app-status-text"><span class="app-status-dot"></span>Active</span>
+            <span class="app-launch-btn">Open <i class="bi bi-arrow-right"></i></span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- LoadRunner -->
+    <div class="col-md-4">
+      <a class="app-card" onclick="showScreen('plan')">
+        <div class="app-card-banner banner-green-teal"></div>
+        <div class="app-card-body">
+          <div class="app-card-top">
+            <div class="app-icon-lg grad-green-teal"><i class="bi bi-play-circle-fill"></i></div>
+            <div class="app-card-text">
+              <p class="app-card-name">LoadRunner</p>
+              <p class="app-card-desc">Run and monitor the Fabric load plan step-by-step with live status streaming.</p>
+            </div>
+          </div>
+          <div class="app-card-footer">
+            <span class="app-status-text"><span class="app-status-dot"></span>Active</span>
+            <span class="app-launch-btn">Open <i class="bi bi-arrow-right"></i></span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <!-- SyncBuilder -->
+    <div class="col-md-4">
+      <a class="app-card" onclick="showScreen('pipeline')">
+        <div class="app-card-banner banner-purple-pink"></div>
+        <div class="app-card-body">
+          <div class="app-card-top">
+            <div class="app-icon-lg grad-purple-pink"><i class="bi bi-bezier2"></i></div>
+            <div class="app-card-text">
+              <p class="app-card-name">SyncBuilder</p>
+              <p class="app-card-desc">Build and deploy Fabric Copy pipelines between any supported warehouse or SQL database.</p>
+            </div>
+          </div>
+          <div class="app-card-footer">
+            <span class="app-status-text"><span class="app-status-dot"></span>Active</span>
+            <span class="app-launch-btn">Open <i class="bi bi-arrow-right"></i></span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 2 — DATATRACE
+════════════════════════════════════════════════════ -->
+<main class="main screen" id="screen-dwh">
+  <ol class="breadcrumb">
+    <li><a onclick="showScreen('home')">Dashboard</a></li>
+    <li class="sep"><i class="bi bi-chevron-right"></i></li>
+    <li class="current">DataTrace</li>
+  </ol>
+  <div class="page-header d-flex align-items-start justify-content-between">
+    <div class="d-flex gap-3 align-items-center">
+      <div class="app-icon-md grad-blue-indigo"><i class="bi bi-database-fill"></i></div>
+      <div>
+        <h1 class="page-title">DataTrace</h1>
+        <p class="page-subtitle">Stored procedure catalog — WH_STAGING</p>
+      </div>
+    </div>
+    <div class="d-flex gap-2">
+      <button class="btn-ghost"><i class="bi bi-diagram-3 me-1"></i>Data Flow Chain</button>
+      <button class="btn-ghost"><i class="bi bi-arrow-clockwise me-1"></i>Refresh</button>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><i class="bi bi-list-ul me-2"></i>Stored Procedures</div>
+    <div class="card-body p-0">
+      <table class="data-table">
+        <thead><tr><th>Name</th><th>Schema</th><th>Source DB</th><th>Target Table</th><th>Last Modified</th><th></th></tr></thead>
+        <tbody>
+          <tr><td class="mono">ACADEMIC_YEAR_F_SP</td><td><span class="badge-type badge-dw">dbo</span></td><td>WH_STAGING</td><td class="mono">dbo.ACADEMIC_YEAR_F</td><td style="color:var(--text-secondary)">2025-11-14</td><td><button class="btn-ghost">View</button></td></tr>
+          <tr><td class="mono">EMPLOYEE_F_COMBO_SP</td><td><span class="badge-type badge-dw">dbo</span></td><td>WH_STAGING</td><td class="mono">dbo.EMPLOYEE_F</td><td style="color:var(--text-secondary)">2025-12-02</td><td><button class="btn-ghost">View</button></td></tr>
+          <tr><td class="mono">LEASE_AGG_F_SP</td><td><span class="badge-type badge-dw">dbo</span></td><td>WH_STAGING</td><td class="mono">dbo.LEASE_AGG_F</td><td style="color:var(--text-secondary)">2026-01-09</td><td><button class="btn-ghost">View</button></td></tr>
+          <tr><td class="mono">ADMIN_APP_FEES_0_SP</td><td><span class="badge-type badge-dw">dbo</span></td><td>WH_STAGING</td><td class="mono">dbo.ADMIN_APP_FEES_0</td><td style="color:var(--text-secondary)">2026-01-22</td><td><button class="btn-ghost">View</button></td></tr>
+          <tr><td class="mono">MAINTENANCE_REQUESTS_0_SL_SP</td><td><span class="badge-type badge-dw">dbo</span></td><td>WH_STAGING</td><td class="mono">dbo.MAINTENANCE_REQUESTS_0_SL</td><td style="color:var(--text-secondary)">2026-02-07</td><td><button class="btn-ghost">View</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 3 — EXECUTION PLAN RUNNER
+════════════════════════════════════════════════════ -->
+<main class="main screen" id="screen-plan">
+  <ol class="breadcrumb">
+    <li><a onclick="showScreen('home')">Dashboard</a></li>
+    <li class="sep"><i class="bi bi-chevron-right"></i></li>
+    <li class="current">LoadRunner</li>
+  </ol>
+  <div class="page-header d-flex align-items-start justify-content-between">
+    <div class="d-flex gap-3 align-items-center">
+      <div class="app-icon-md grad-green-teal"><i class="bi bi-play-circle-fill"></i></div>
+      <div>
+        <h1 class="page-title">LoadRunner</h1>
+        <p class="page-subtitle">DB_BI_Support.control.EXECUTION_PLAN — 22 steps loaded</p>
+      </div>
+    </div>
+    <button class="btn-success"><i class="bi bi-play-fill me-2"></i>Run Plan</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><i class="bi bi-list-check me-2"></i>Plan Steps</div>
+    <div class="card-body p-0">
+      <table class="data-table">
+        <thead><tr><th>Order</th><th>Step Name</th><th>Type</th><th>Active</th><th>Last Run</th><th>Status</th><th>Duration</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--text-muted)">1</td><td class="mono">ACADEMIC_YEAR_F_SP</td><td><span class="badge-type badge-dw">SP</span></td><td><i class="bi bi-check-circle-fill" style="color:var(--green)"></i></td><td style="color:var(--text-secondary)">Today 09:14</td><td><span class="badge-type badge-ok">Success</span></td><td style="color:var(--text-secondary)">4.2 s</td></tr>
+          <tr><td style="color:var(--text-muted)">2</td><td class="mono">PL_SYNC_EMPLOYEE_F</td><td><span class="badge-type badge-sql">PL</span></td><td><i class="bi bi-check-circle-fill" style="color:var(--green)"></i></td><td style="color:var(--text-secondary)">Today 09:14</td><td><span class="badge-type badge-ok">Success</span></td><td style="color:var(--text-secondary)">12.7 s</td></tr>
+          <tr><td style="color:var(--text-muted)">3</td><td class="mono">LEASE_AGG_F_SP</td><td><span class="badge-type badge-dw">SP</span></td><td><i class="bi bi-check-circle-fill" style="color:var(--green)"></i></td><td style="color:var(--text-secondary)">Today 09:15</td><td><span class="badge-type badge-ok">Success</span></td><td style="color:var(--text-secondary)">8.1 s</td></tr>
+          <tr style="opacity:.4"><td style="color:var(--text-muted)">4</td><td class="mono">ADMIN_APP_FEES_0_SP</td><td><span class="badge-type badge-dw">SP</span></td><td><i class="bi bi-x-circle" style="color:var(--text-muted)"></i></td><td style="color:var(--text-muted)">—</td><td style="color:var(--text-muted)">Skipped</td><td style="color:var(--text-muted)">—</td></tr>
+          <tr><td style="color:var(--text-muted)">5</td><td class="mono">MAINTENANCE_REQUESTS_0_SL_SP</td><td><span class="badge-type badge-dw">SP</span></td><td><i class="bi bi-check-circle-fill" style="color:var(--green)"></i></td><td style="color:var(--text-secondary)">Today 09:15</td><td><span class="badge-type badge-warn">Warning</span></td><td style="color:var(--text-secondary)">31.4 s</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 4 — SYNCBUILDER
+════════════════════════════════════════════════════ -->
+<main class="main screen" id="screen-pipeline">
+  <ol class="breadcrumb">
+    <li><a onclick="showScreen('home')">Dashboard</a></li>
+    <li class="sep"><i class="bi bi-chevron-right"></i></li>
+    <li class="current">SyncBuilder</li>
+  </ol>
+  <div class="page-header d-flex align-items-start justify-content-between">
+    <div class="d-flex gap-3 align-items-center">
+      <div class="app-icon-md grad-purple-pink"><i class="bi bi-bezier2"></i></div>
+      <div>
+        <h1 class="page-title">SyncBuilder</h1>
+        <p class="page-subtitle">Build and deploy Fabric Copy pipelines — Fabric ETL Workspace</p>
+      </div>
+    </div>
+    <button class="btn-ghost" onclick="showScreen('pipelines-list')"><i class="bi bi-collection me-1"></i>View All Pipelines</button>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-6">
+      <div class="card h-100">
+        <div class="card-header"><i class="bi bi-arrow-left-right me-2"></i>Source &amp; Target</div>
+        <div class="card-body">
+          <div class="mb-3"><label class="form-label">Source Table</label><input class="form-control" type="text" value="WH_STAGING.dbo.ACADEMIC_YEAR_F"><div class="input-hint"><i class="bi bi-info-circle me-1"></i>Supported: WH_STAGING · WH_ODS · WH_PROD2 · DB_APP_SUPPORT · DB_BI_SUPPORT</div></div>
+          <div class="mb-3"><label class="form-label">Target Table</label><input class="form-control" type="text" value="WH_ODS.dbo.ACADEMIC_YEAR_F"></div>
+          <hr class="section-divider">
+          <div class="mb-3"><label class="form-label">Pipeline Name</label><input class="form-control" type="text" value="PL_Sync_ACADEMIC_YEAR_F"></div>
+          <div class="mb-4"><label class="form-label">Description</label><textarea class="form-control" rows="2">Copies dbo.ACADEMIC_YEAR_F from WH_STAGING into WH_ODS.dbo. Full table, truncate-before-load. Manual trigger only.</textarea></div>
+          <div class="d-flex gap-2 align-items-center">
+            <button class="btn-success"><i class="bi bi-cloud-upload me-2"></i>Deploy to Fabric</button>
+            <button class="btn-outline-secondary"><i class="bi bi-eye me-2"></i>Dry Run / Preview</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mb-3">
+        <div class="card-header"><i class="bi bi-code-slash me-2"></i>Pipeline JSON Preview</div>
+        <div class="card-body p-0">
+          <div class="preview-panel" style="border-radius:0 0 10px 10px;margin:0;max-height:240px;overflow-y:auto"><span class="punct">{</span>
+  <span class="key">"properties"</span><span class="punct">: {</span>
+    <span class="key">"description"</span><span class="punct">:</span> <span class="str">"Copies dbo.ACADEMIC_YEAR_F from WH_STAGING..."</span><span class="punct">,</span>
+    <span class="key">"activities"</span><span class="punct">: [{</span>
+      <span class="key">"name"</span><span class="punct">:</span> <span class="str">"Copy_ACADEMIC_YEAR_F_to_ACADEMIC_YEAR_F"</span><span class="punct">,</span>
+      <span class="key">"type"</span><span class="punct">:</span> <span class="str">"Copy"</span><span class="punct">,</span>
+      <span class="key">"typeProperties"</span><span class="punct">: {</span>
+        <span class="key">"source"</span><span class="punct">: { "type":</span> <span class="str">"DataWarehouseSource"</span> <span class="punct">},</span>
+        <span class="key">"sink"</span><span class="punct">: {</span>
+          <span class="key">"type"</span><span class="punct">:</span> <span class="str">"DataWarehouseSink"</span><span class="punct">,</span>
+          <span class="key">"preCopyScript"</span><span class="punct">:</span> <span class="str">"TRUNCATE TABLE dbo.ACADEMIC_YEAR_F"</span>
+        <span class="punct">}</span>
+      <span class="punct">}</span>
+    <span class="punct">}]</span>
+  <span class="punct">}</span>
+<span class="punct">}</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><i class="bi bi-info-circle me-2"></i>Summary</div>
+        <div class="card-body" style="font-size:.83rem">
+          <div class="row g-2">
+            <div class="col-5" style="color:var(--text-muted)">Source</div><div class="col-7 mono">WH_STAGING.dbo.ACADEMIC_YEAR_F</div>
+            <div class="col-5" style="color:var(--text-muted)">Target</div><div class="col-7 mono">WH_ODS.dbo.ACADEMIC_YEAR_F</div>
+            <div class="col-5" style="color:var(--text-muted)">Source type</div><div class="col-7"><span class="badge-type badge-dw">DataWarehouse</span></div>
+            <div class="col-5" style="color:var(--text-muted)">Target type</div><div class="col-7"><span class="badge-type badge-dw">DataWarehouse</span></div>
+            <div class="col-5" style="color:var(--text-muted)">Load strategy</div><div class="col-7" style="color:var(--text-secondary)">Truncate &amp; reload</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 4b — PIPELINE LIST
+════════════════════════════════════════════════════ -->
+<main class="main screen" id="screen-pipelines-list">
+  <ol class="breadcrumb">
+    <li><a onclick="showScreen('home')">Dashboard</a></li>
+    <li class="sep"><i class="bi bi-chevron-right"></i></li>
+    <li><a onclick="showScreen('pipeline')">SyncBuilder</a></li>
+    <li class="sep"><i class="bi bi-chevron-right"></i></li>
+    <li class="current">All Pipelines</li>
+  </ol>
+  <div class="page-header d-flex align-items-start justify-content-between">
+    <div class="d-flex gap-3 align-items-center">
+      <div class="app-icon-md grad-purple-pink"><i class="bi bi-collection-fill"></i></div>
+      <div><h1 class="page-title">All Pipelines</h1><p class="page-subtitle">12 pipelines — Fabric ETL Workspace</p></div>
+    </div>
+    <button class="btn-primary" onclick="showScreen('pipeline')"><i class="bi bi-plus-lg me-2"></i>Build New Pipeline</button>
+  </div>
+  <div class="card">
+    <div class="card-header"><i class="bi bi-collection me-2"></i>Workspace Pipelines</div>
+    <div class="card-body p-0">
+      <table class="data-table">
+        <thead><tr><th>Pipeline Name</th><th>Source</th><th>Target</th><th>Type</th><th></th></tr></thead>
+        <tbody>
+          <tr><td class="mono">PL_Sync_ACADEMIC_YEAR_F</td><td class="mono" style="color:var(--text-secondary)">WH_STAGING.dbo</td><td class="mono" style="color:var(--text-secondary)">WH_ODS.dbo</td><td><span class="badge-type badge-dw">DW → DW</span></td><td><button class="btn-ghost">Inspect JSON</button></td></tr>
+          <tr><td class="mono">PL_Sync_EMPLOYEE_F</td><td class="mono" style="color:var(--text-secondary)">WH_STAGING.dbo</td><td class="mono" style="color:var(--text-secondary)">WH_ODS.dbo</td><td><span class="badge-type badge-dw">DW → DW</span></td><td><button class="btn-ghost">Inspect JSON</button></td></tr>
+          <tr><td class="mono">PL_Sync_LEASE_TERMS_0</td><td class="mono" style="color:var(--text-secondary)">DB_APP_SUPPORT.xtemp</td><td class="mono" style="color:var(--text-secondary)">WH_STAGING.dbo</td><td><span class="badge-type badge-sql">SQL → DW</span></td><td><button class="btn-ghost">Inspect JSON</button></td></tr>
+          <tr><td class="mono">PL_Sync_RATE_TIERS_0A</td><td class="mono" style="color:var(--text-secondary)">WH_STAGING.dbo</td><td class="mono" style="color:var(--text-secondary)">WH_PROD2.dbo</td><td><span class="badge-type badge-dw">DW → DW</span></td><td><button class="btn-ghost">Inspect JSON</button></td></tr>
+          <tr><td class="mono">PL_Sync_GIFT_CARDS_0</td><td class="mono" style="color:var(--text-secondary)">DB_BI_SUPPORT.dbo</td><td class="mono" style="color:var(--text-secondary)">WH_STAGING.dbo</td><td><span class="badge-type badge-sql">SQL → DW</span></td><td><button class="btn-ghost">Inspect JSON</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 5 — ADD NEW APP
+════════════════════════════════════════════════════ -->
+<main class="main screen" id="screen-register">
+  <ol class="breadcrumb">
+    <li><a onclick="showScreen('home')">Dashboard</a></li>
+    <li class="sep"><i class="bi bi-chevron-right"></i></li>
+    <li class="current">Add New App</li>
+  </ol>
+  <div class="page-header">
+    <h1 class="page-title"><i class="bi bi-plus-square me-2" style="color:var(--green)"></i>Add New App</h1>
+    <p class="page-subtitle">Register a new app to make it available in the hub. Three steps.</p>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-1-circle me-2"></i>App Identity</div>
+        <div class="card-body">
+          <div class="mb-3"><label class="form-label">App Name</label><input class="form-control" type="text" placeholder="e.g. Data Quality Monitor"></div>
+          <div class="mb-0"><label class="form-label">Short Description</label><input class="form-control" type="text" placeholder="One sentence shown on the dashboard card"></div>
+        </div>
+      </div>
+      <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-2-circle me-2"></i>Routing &amp; Location</div>
+        <div class="card-body">
+          <div class="mb-3"><label class="form-label">URL Prefix</label><div class="input-group"><span class="input-group-text" style="background:var(--bg-elevated);border-color:var(--border);color:var(--text-muted)">/</span><input class="form-control" type="text" placeholder="e.g. data-quality"></div><div class="input-hint">App will be available at /data-quality/</div></div>
+          <div class="mb-0"><label class="form-label">Blueprint Module Path</label><input class="form-control" type="text" placeholder="blueprints/data_quality.py"><div class="input-hint">The Python file containing the Flask Blueprint for this app.</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><i class="bi bi-3-circle me-2"></i>Visibility</div>
+        <div class="card-body">
+          <div class="form-check form-switch mb-2" style="display:flex;align-items:center;gap:10px"><input class="form-check-input" type="checkbox" checked style="width:2.4em;height:1.3em;cursor:pointer"><label class="form-check-label" style="color:var(--text-secondary);font-size:.85rem">Show on dashboard</label></div>
+          <div class="form-check form-switch" style="display:flex;align-items:center;gap:10px"><input class="form-check-input" type="checkbox" checked style="width:2.4em;height:1.3em;cursor:pointer"><label class="form-check-label" style="color:var(--text-secondary);font-size:.85rem">Show in sidebar</label></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card mb-3" style="border-color:var(--accent)">
+        <div class="card-header">Preview — Dashboard Card</div>
+        <div class="card-body">
+          <div class="app-card" style="cursor:default;pointer-events:none">
+            <div class="app-card-banner banner-blue-indigo"></div>
+            <div class="app-card-body">
+              <div class="app-card-top">
+                <div class="app-icon-lg grad-blue-indigo"><i class="bi bi-graph-up"></i></div>
+                <div class="app-card-text">
+                  <p class="app-card-name">Your App Name</p>
+                  <p class="app-card-desc">One sentence shown on the dashboard card</p>
+                </div>
+              </div>
+              <div class="app-card-footer">
+                <span class="app-status-text"><span class="app-status-dot"></span>Active</span>
+                <span class="app-launch-btn">Open <i class="bi bi-arrow-right"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="background:rgba(34,197,94,.05);border-color:rgba(34,197,94,.2)">
+        <div class="card-body" style="font-size:.82rem;color:var(--text-secondary)">
+          <p style="color:var(--green);font-weight:700;margin-bottom:8px"><i class="bi bi-lightbulb me-2"></i>What happens when you register</p>
+          <ul style="padding-left:1.2em;margin:0;line-height:2">
+            <li>An entry is added to <span class="mono" style="font-size:.78rem">app_registry.json</span></li>
+            <li>The app appears on the dashboard and sidebar</li>
+            <li>The hub registers the Blueprint on next restart</li>
+            <li>No other code changes needed</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-4 d-flex gap-2">
+        <button class="btn-success" style="flex:1"><i class="bi bi-check-lg me-2"></i>Register App</button>
+        <button class="btn-outline-secondary">Cancel</button>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 6 — SETTINGS (app list)
+════════════════════════════════════════════════════ -->
+<main class="main screen" id="screen-settings">
+  <ol class="breadcrumb">
+    <li><a onclick="showScreen('home')">Dashboard</a></li>
+    <li class="sep"><i class="bi bi-chevron-right"></i></li>
+    <li class="current">Settings</li>
+  </ol>
+  <div class="page-header">
+    <h1 class="page-title"><i class="bi bi-sliders me-2" style="color:var(--accent)"></i>Settings</h1>
+    <p class="page-subtitle">Manage registered apps — rename, re-theme, update icons, or deactivate.</p>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <!-- Hub-wide settings -->
+      <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-hexagon me-2"></i>Hub Settings</div>
+        <div class="card-body">
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Default theme</div>
+              <div class="toggle-desc">Dark mode is on. Toggle to switch the hub default to light.</div>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" checked style="width:2.4em;height:1.3em;cursor:pointer">
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Show stat strip on dashboard</div>
+              <div class="toggle-desc">The four summary tiles at the top of the dashboard.</div>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" checked style="width:2.4em;height:1.3em;cursor:pointer">
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Hub name</div>
+              <div class="toggle-desc">Shown in the top bar and browser title.</div>
+            </div>
+            <input class="form-control" style="width:260px" value="Fabric Administration">
+          </div>
+        </div>
+      </div>
+
+      <!-- Per-app list -->
+      <div class="card">
+        <div class="card-header"><i class="bi bi-grid me-2"></i>Registered Apps</div>
+        <div class="card-body p-0">
+
+          <!-- DataTrace -->
+          <div class="settings-app-row">
+            <div class="app-icon-md grad-blue-indigo"><i class="bi bi-database-fill"></i></div>
+            <div class="settings-app-info">
+              <p class="settings-app-name">DataTrace</p>
+              <p class="settings-app-meta">Route: /dwh/ &nbsp;·&nbsp; Blueprint: blueprints/dwh_loader.py &nbsp;·&nbsp; <span style="color:var(--green)">Active</span></p>
+            </div>
+            <div class="settings-app-actions">
+              <button class="btn-ghost" onclick="showScreen('settings-app-dwh')"><i class="bi bi-pencil me-1"></i>Edit</button>
+              <button class="btn-ghost"><i class="bi bi-eye-slash me-1"></i>Deactivate</button>
+            </div>
+          </div>
+
+          <!-- LoadRunner -->
+          <div class="settings-app-row">
+            <div class="app-icon-md grad-green-teal"><i class="bi bi-play-circle-fill"></i></div>
+            <div class="settings-app-info">
+              <p class="settings-app-name">LoadRunner</p>
+              <p class="settings-app-meta">Route: /plan/ &nbsp;·&nbsp; Blueprint: blueprints/execution_plan.py &nbsp;·&nbsp; <span style="color:var(--green)">Active</span></p>
+            </div>
+            <div class="settings-app-actions">
+              <button class="btn-ghost" onclick="showScreen('settings-app-plan')"><i class="bi bi-pencil me-1"></i>Edit</button>
+              <button class="btn-ghost"><i class="bi bi-eye-slash me-1"></i>Deactivate</button>
+            </div>
+          </div>
+
+          <!-- SyncBuilder -->
+          <div class="settings-app-row">
+            <div class="app-icon-md grad-purple-pink"><i class="bi bi-bezier2"></i></div>
+            <div class="settings-app-info">
+              <p class="settings-app-name">SyncBuilder</p>
+              <p class="settings-app-meta">Route: /pipeline/ &nbsp;·&nbsp; Blueprint: blueprints/pipeline_builder.py &nbsp;·&nbsp; <span style="color:var(--green)">Active</span></p>
+            </div>
+            <div class="settings-app-actions">
+              <button class="btn-ghost" onclick="showScreen('settings-app-pipeline')"><i class="bi bi-pencil me-1"></i>Edit</button>
+              <button class="btn-ghost"><i class="bi bi-eye-slash me-1"></i>Deactivate</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <div class="card" style="border-color:rgba(79,110,247,.3)">
+        <div class="card-header" style="border-left-color:#7c3aed">Quick Actions</div>
+        <div class="card-body d-flex flex-column gap-2">
+          <button class="btn-primary" onclick="showScreen('register')" style="text-align:left"><i class="bi bi-plus-lg me-2"></i>Register a New App</button>
+          <button class="btn-ghost" style="text-align:left"><i class="bi bi-arrow-clockwise me-2"></i>Restart Hub Server</button>
+          <button class="btn-ghost" style="text-align:left"><i class="bi bi-download me-2"></i>Export app_registry.json</button>
+          <button class="btn-ghost" style="text-align:left"><i class="bi bi-upload me-2"></i>Import app_registry.json</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 7 — PER-APP SETTINGS (DataTrace example)
+════════════════════════════════════════════════════ -->
+<main class="main screen" id="screen-settings-app-dwh">
+  <ol class="breadcrumb">
+    <li><a onclick="showScreen('home')">Dashboard</a></li>
+    <li class="sep"><i class="bi bi-chevron-right"></i></li>
+    <li><a onclick="showScreen('settings')">Settings</a></li>
+    <li class="sep"><i class="bi bi-chevron-right"></i></li>
+    <li class="current">DataTrace</li>
+  </ol>
+
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <div class="app-icon-lg grad-blue-indigo" id="preview-icon-dwh"><i class="bi bi-database-fill"></i></div>
+    <div>
+      <h1 class="page-title" style="margin-bottom:2px">DataTrace</h1>
+      <p class="page-subtitle">App Settings</p>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-lg-7">
+
+      <!-- Identity -->
+      <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-tag me-2"></i>Identity</div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label class="form-label">App Name</label>
+            <input class="form-control" type="text" value="DataTrace">
+            <div class="input-hint">Shown in the sidebar, top bar, and dashboard card.</div>
+          </div>
+          <div class="mb-0">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" rows="2">Catalog and visualize WH_STAGING stored procedures, data flow chains, and dependencies.</textarea>
+            <div class="input-hint">Shown on the dashboard card.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Icon & Color -->
+      <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-palette me-2"></i>Icon &amp; Color</div>
+        <div class="card-body">
+          <label class="form-label mb-2">Choose Icon</label>
+          <div class="icon-grid mb-4">
+            <div class="icon-opt selected"><i class="bi bi-database-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-table"></i></div>
+            <div class="icon-opt"><i class="bi bi-diagram-3-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-file-earmark-code-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-server"></i></div>
+            <div class="icon-opt"><i class="bi bi-hdd-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-layers-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-grid-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-graph-up-arrow"></i></div>
+            <div class="icon-opt"><i class="bi bi-bar-chart-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-pie-chart-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-activity"></i></div>
+            <div class="icon-opt"><i class="bi bi-shield-fill-check"></i></div>
+            <div class="icon-opt"><i class="bi bi-gear-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-search"></i></div>
+            <div class="icon-opt"><i class="bi bi-cloud-fill"></i></div>
+          </div>
+
+          <label class="form-label mb-2">Gradient / Color</label>
+          <div class="grad-picker mb-3">
+            <div class="grad-opt selected" style="background:linear-gradient(135deg,#3b82f6,#6366f1)" title="Blue → Indigo"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#22c55e,#0891b2)" title="Green → Teal"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#a855f7,#ec4899)" title="Purple → Pink"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#f59e0b,#ef4444)" title="Amber → Red"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)" title="Cyan → Blue"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#f43f5e,#f59e0b)" title="Rose → Amber"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#10b981,#059669)" title="Emerald"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#8b5cf6,#4f6ef7)" title="Violet → Indigo"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#64748b,#334155)" title="Slate (neutral)"></div>
+          </div>
+
+          <label class="form-label mb-2">Upload Custom Icon</label>
+          <div class="upload-zone">
+            <i class="bi bi-cloud-arrow-up"></i>
+            Drag &amp; drop an image, or click to browse
+            <div style="margin-top:4px;font-size:.7rem">PNG, SVG or WebP · 512×512 recommended</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Display -->
+      <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-eye me-2"></i>Display &amp; Theme</div>
+        <div class="card-body">
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Per-app theme override</div>
+              <div class="toggle-desc">Force this app to always use dark mode regardless of hub setting.</div>
+            </div>
+            <select class="form-select" style="width:160px">
+              <option>Follow hub</option>
+              <option selected>Always dark</option>
+              <option>Always light</option>
+            </select>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Show on dashboard</div>
+              <div class="toggle-desc">Display this app's card on the hub home page.</div>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" checked style="width:2.4em;height:1.3em;cursor:pointer">
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Show in sidebar</div>
+              <div class="toggle-desc">List this app in the left navigation.</div>
+            </div>
+            <div class="form-check form-switch mb-0">
+              <input class="form-check-input" type="checkbox" checked style="width:2.4em;height:1.3em;cursor:pointer">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Danger zone -->
+      <div class="card" style="border-color:rgba(239,68,68,.25)">
+        <div class="card-header" style="border-left-color:var(--red);color:#fca5a5">
+          <i class="bi bi-exclamation-triangle me-2"></i>Danger Zone
+        </div>
+        <div class="card-body d-flex align-items-center justify-content-between">
+          <div>
+            <div style="font-size:.87rem;font-weight:600;color:var(--text-primary)">Remove this app</div>
+            <div style="font-size:.75rem;color:var(--text-muted)">Removes the registry entry. The Blueprint file is not deleted.</div>
+          </div>
+          <button class="btn-danger-ghost"><i class="bi bi-trash me-1"></i>Remove App</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: live preview -->
+    <div class="col-lg-5">
+      <div class="card" style="position:sticky;top:calc(var(--topbar-h) + 20px)">
+        <div class="card-header"><i class="bi bi-eye me-2"></i>Live Preview</div>
+        <div class="card-body">
+          <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:8px">Dashboard Card</div>
+          <div class="app-card" style="cursor:default;pointer-events:none;margin-bottom:20px">
+            <div class="app-card-banner banner-blue-indigo"></div>
+            <div class="app-card-body">
+              <div class="app-card-top">
+                <div class="app-icon-lg grad-blue-indigo"><i class="bi bi-database-fill"></i></div>
+                <div class="app-card-text">
+                  <p class="app-card-name">DataTrace</p>
+                  <p class="app-card-desc">Catalog and visualize WH_STAGING stored procedures, data flow chains, and dependencies.</p>
+                </div>
+              </div>
+              <div class="app-card-footer">
+                <span class="app-status-text"><span class="app-status-dot"></span>Active</span>
+                <span class="app-launch-btn">Open <i class="bi bi-arrow-right"></i></span>
+              </div>
+            </div>
+          </div>
+
+          <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:8px">Sidebar Entry</div>
+          <div style="background:var(--bg-elevated);border-radius:8px;padding:4px 0;border:1px solid var(--border)">
+            <div class="sidebar-item active" style="position:relative;border-radius:0;pointer-events:none">
+              <i class="bi bi-database"></i> DataTrace
+            </div>
+          </div>
+
+          <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin:20px 0 8px">Settings List Entry</div>
+          <div style="background:var(--bg-elevated);border-radius:8px;border:1px solid var(--border);overflow:hidden">
+            <div class="settings-app-row" style="pointer-events:none">
+              <div class="app-icon-md grad-blue-indigo"><i class="bi bi-database-fill"></i></div>
+              <div class="settings-app-info">
+                <p class="settings-app-name">DataTrace</p>
+                <p class="settings-app-meta">Route: /dwh/ &nbsp;·&nbsp; <span style="color:var(--green)">Active</span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="d-flex gap-2 mt-4">
+    <button class="btn-success"><i class="bi bi-check-lg me-2"></i>Save Changes</button>
+    <button class="btn-outline-secondary" onclick="showScreen('settings')">Cancel</button>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 7b — PER-APP SETTINGS (SyncBuilder —
+     shows purple gradient + different icon to
+     demonstrate the system working across apps)
+════════════════════════════════════════════════════ -->
+<main class="main screen" id="screen-settings-app-pipeline">
+  <ol class="breadcrumb">
+    <li><a onclick="showScreen('home')">Dashboard</a></li>
+    <li class="sep"><i class="bi bi-chevron-right"></i></li>
+    <li><a onclick="showScreen('settings')">Settings</a></li>
+    <li class="sep"><i class="bi bi-chevron-right"></i></li>
+    <li class="current">SyncBuilder</li>
+  </ol>
+  <div class="d-flex align-items-center gap-3 mb-4">
+    <div class="app-icon-lg grad-purple-pink"><i class="bi bi-bezier2"></i></div>
+    <div>
+      <h1 class="page-title" style="margin-bottom:2px">SyncBuilder</h1>
+      <p class="page-subtitle">App Settings</p>
+    </div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-tag me-2"></i>Identity</div>
+        <div class="card-body">
+          <div class="mb-3"><label class="form-label">App Name</label><input class="form-control" type="text" value="SyncBuilder"></div>
+          <div class="mb-0"><label class="form-label">Description</label><textarea class="form-control" rows="2">Build and deploy Fabric Copy pipelines between any supported warehouse or SQL database.</textarea></div>
+        </div>
+      </div>
+      <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-palette me-2"></i>Icon &amp; Color</div>
+        <div class="card-body">
+          <label class="form-label mb-2">Choose Icon</label>
+          <div class="icon-grid mb-4">
+            <div class="icon-opt"><i class="bi bi-database-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-table"></i></div>
+            <div class="icon-opt"><i class="bi bi-diagram-3-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-file-earmark-code-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-server"></i></div>
+            <div class="icon-opt"><i class="bi bi-hdd-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-layers-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-grid-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-graph-up-arrow"></i></div>
+            <div class="icon-opt"><i class="bi bi-bar-chart-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-pie-chart-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-activity"></i></div>
+            <div class="icon-opt"><i class="bi bi-shield-fill-check"></i></div>
+            <div class="icon-opt"><i class="bi bi-gear-fill"></i></div>
+            <div class="icon-opt"><i class="bi bi-search"></i></div>
+            <div class="icon-opt selected"><i class="bi bi-bezier2"></i></div>
+          </div>
+          <label class="form-label mb-2">Gradient / Color</label>
+          <div class="grad-picker mb-3">
+            <div class="grad-opt" style="background:linear-gradient(135deg,#3b82f6,#6366f1)"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#22c55e,#0891b2)"></div>
+            <div class="grad-opt selected" style="background:linear-gradient(135deg,#a855f7,#ec4899)"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#f59e0b,#ef4444)"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#06b6d4,#3b82f6)"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#f43f5e,#f59e0b)"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#10b981,#059669)"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#8b5cf6,#4f6ef7)"></div>
+            <div class="grad-opt" style="background:linear-gradient(135deg,#64748b,#334155)"></div>
+          </div>
+          <label class="form-label mb-2">Upload Custom Icon</label>
+          <div class="upload-zone"><i class="bi bi-cloud-arrow-up"></i>Drag &amp; drop an image, or click to browse<div style="margin-top:4px;font-size:.7rem">PNG, SVG or WebP · 512×512 recommended</div></div>
+        </div>
+      </div>
+      <div class="card mb-4">
+        <div class="card-header"><i class="bi bi-eye me-2"></i>Display &amp; Theme</div>
+        <div class="card-body">
+          <div class="toggle-row"><div><div class="toggle-label">Per-app theme override</div><div class="toggle-desc">Force this app to always use dark mode regardless of hub setting.</div></div><select class="form-select" style="width:160px"><option>Follow hub</option><option selected>Always dark</option><option>Always light</option></select></div>
+          <div class="toggle-row"><div><div class="toggle-label">Show on dashboard</div><div class="toggle-desc">Display this app's card on the hub home page.</div></div><div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" checked style="width:2.4em;height:1.3em;cursor:pointer"></div></div>
+          <div class="toggle-row"><div><div class="toggle-label">Show in sidebar</div><div class="toggle-desc">List this app in the left navigation.</div></div><div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" checked style="width:2.4em;height:1.3em;cursor:pointer"></div></div>
+        </div>
+      </div>
+      <div class="card" style="border-color:rgba(239,68,68,.25)">
+        <div class="card-header" style="border-left-color:var(--red);color:#fca5a5"><i class="bi bi-exclamation-triangle me-2"></i>Danger Zone</div>
+        <div class="card-body d-flex align-items-center justify-content-between">
+          <div><div style="font-size:.87rem;font-weight:600;color:var(--text-primary)">Remove this app</div><div style="font-size:.75rem;color:var(--text-muted)">Removes the registry entry. The Blueprint file is not deleted.</div></div>
+          <button class="btn-danger-ghost"><i class="bi bi-trash me-1"></i>Remove App</button>
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-5">
+      <div class="card" style="position:sticky;top:calc(var(--topbar-h) + 20px)">
+        <div class="card-header"><i class="bi bi-eye me-2"></i>Live Preview</div>
+        <div class="card-body">
+          <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-muted);margin-bottom:8px">Dashboard Card</div>
+          <div class="app-card" style="cursor:default;pointer-events:none;margin-bottom:20px">
+            <div class="app-card-banner banner-purple-pink"></div>
+            <div class="app-card-body">
+              <div class="app-card-top">
+                <div class="app-icon-lg grad-purple-pink"><i class="bi bi-bezier2"></i></div>
+                <div class="app-card-text">
+                  <p class="app-card-name">SyncBuilder</p>
+                  <p class="app-card-desc">Build and deploy Fabric Copy pipelines between any supported warehouse or SQL database.</p>
+                </div>
+              </div>
+              <div class="app-card-footer">
+                <span class="app-status-text"><span class="app-status-dot"></span>Active</span>
+                <span class="app-launch-btn">Open <i class="bi bi-arrow-right"></i></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="d-flex gap-2 mt-4">
+    <button class="btn-success"><i class="bi bi-check-lg me-2"></i>Save Changes</button>
+    <button class="btn-outline-secondary" onclick="showScreen('settings')">Cancel</button>
+  </div>
+</main>
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN SWITCHER WIDGET
+════════════════════════════════════════════════════ -->
+<div id="screen-picker">
+  <div class="label">Mockup Screens</div>
+  <button onclick="showScreen('home')">1 · Dashboard</button>
+  <button onclick="showScreen('dwh')">2 · DataTrace</button>
+  <button onclick="showScreen('plan')">3 · LoadRunner</button>
+  <button onclick="showScreen('pipeline')">4 · SyncBuilder</button>
+  <button onclick="showScreen('pipelines-list')">4b · Pipeline List</button>
+  <button onclick="showScreen('register')">5 · Add New App</button>
+  <button onclick="showScreen('settings')">6 · Settings</button>
+  <button onclick="showScreen('settings-app-dwh')">7a · App Settings (DataTrace)</button>
+  <button onclick="showScreen('settings-app-pipeline')">7b · App Settings (Pipeline)</button>
+</div>
+
+<script>
+const screens = {
+  'home':                  { el:'screen-home',                 nav:'nav-home',     label:'Dashboard' },
+  'dwh':                   { el:'screen-dwh',                  nav:'nav-dwh',      label:'DataTrace' },
+  'plan':                  { el:'screen-plan',                  nav:'nav-plan',     label:'LoadRunner' },
+  'pipeline':              { el:'screen-pipeline',             nav:'nav-pipeline', label:'SyncBuilder' },
+  'pipelines-list':        { el:'screen-pipelines-list',       nav:'nav-pipeline', label:'SyncBuilder — All Pipelines' },
+  'register':              { el:'screen-register',             nav:'nav-register', label:'Add New App' },
+  'settings':              { el:'screen-settings',             nav:'nav-settings', label:'Settings' },
+  'settings-app-dwh':      { el:'screen-settings-app-dwh',     nav:'nav-settings', label:'Settings — DataTrace' },
+  'settings-app-plan':     { el:'screen-settings-app-plan',    nav:'nav-settings', label:'Settings — LoadRunner' },
+  'settings-app-pipeline': { el:'screen-settings-app-pipeline',nav:'nav-settings', label:'Settings — SyncBuilder' },
+};
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('#screen-picker button').forEach(b => b.classList.remove('active'));
+  const cfg = screens[id];
+  if (!cfg) return;
+  document.getElementById(cfg.el).classList.add('active');
+  const navEl = document.getElementById(cfg.nav);
+  if (navEl) navEl.classList.add('active');
+  document.getElementById('topbar-context').textContent = cfg.label;
+  document.querySelectorAll('#screen-picker button').forEach(b => {
+    if (b.getAttribute('onclick') === `showScreen('${id}')`) b.classList.add('active');
+  });
+  window.scrollTo(0, 0);
+}
+
+// Icon grid click to select
+document.querySelectorAll('.icon-grid').forEach(grid => {
+  grid.addEventListener('click', e => {
+    const opt = e.target.closest('.icon-opt');
+    if (!opt) return;
+    grid.querySelectorAll('.icon-opt').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+  });
+});
+
+// Gradient picker click to select
+document.querySelectorAll('.grad-picker').forEach(picker => {
+  picker.addEventListener('click', e => {
+    const opt = e.target.closest('.grad-opt');
+    if (!opt) return;
+    picker.querySelectorAll('.grad-opt').forEach(o => o.classList.remove('selected'));
+    opt.classList.add('selected');
+  });
+});
+
+// Init picker active state
+showScreen('home');
+</script>
+</body>
+</html>

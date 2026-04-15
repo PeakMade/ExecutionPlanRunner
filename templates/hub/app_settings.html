@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header flex items-center gap-3">
+  <a href="{{ url_for('hub.settings') }}" class="btn btn-secondary btn-sm btn-icon">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <div>
+    <h1>{{ app.name }} — Settings</h1>
+    <div class="subtitle">Configure app appearance and visibility</div>
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns: 1fr 320px; gap:1.5rem; align-items:start;">
+
+  <!-- Form -->
+  <form method="post">
+    <div class="card">
+      <div class="card-header">App Configuration</div>
+      <div class="card-body" style="display:flex; flex-direction:column; gap:1.25rem;">
+
+        <div>
+          <label class="form-label">App Name</label>
+          <input type="text" name="name" class="form-control" value="{{ app.name }}" required>
+        </div>
+
+        <div>
+          <label class="form-label">Description</label>
+          <input type="text" name="description" class="form-control" value="{{ app.description }}">
+        </div>
+
+        <div>
+          <label class="form-label">Icon</label>
+          <input type="hidden" name="icon" id="icon-val" value="{{ app.icon }}">
+          <div class="icon-grid" id="icon-grid">
+            {% for ic in icons %}
+            <div class="icon-option {% if ic == app.icon %}selected{% endif %}"
+                 data-icon="{{ ic }}" onclick="selectIcon('{{ ic }}')">
+              <i class="bi {{ ic }}"></i>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div>
+          <label class="form-label">Color Gradient</label>
+          <input type="hidden" name="gradient" id="grad-val" value="{{ app.gradient }}">
+          <div class="grad-grid">
+            {% for g in gradients %}
+            <div class="grad-option {{ g.id }} {% if g.id == app.gradient %}selected{% endif %}"
+                 data-grad="{{ g.id }}" title="{{ g.label }}"
+                 onclick="selectGrad('{{ g.id }}')"></div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1rem;">
+          <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+            <input type="checkbox" name="show_dashboard" {% if app.show_dashboard %}checked{% endif %}>
+            <span>Show on Dashboard</span>
+          </label>
+          <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer;">
+            <input type="checkbox" name="show_sidebar" {% if app.show_sidebar %}checked{% endif %}>
+            <span>Show in Sidebar</span>
+          </label>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:0.5rem; padding-top:0.5rem; border-top: 1px solid var(--border);">
+          <a href="{{ url_for('hub.settings') }}" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <!-- Live preview -->
+  <div>
+    <div class="card">
+      <div class="card-header">Preview</div>
+      <div class="card-body" style="padding:1rem;">
+        <div class="app-card" style="pointer-events:none;">
+          <div class="app-card-banner" id="prev-banner" style="height:5px;"></div>
+          <div class="app-card-body">
+            <div class="app-icon" id="prev-icon">
+              <i class="bi {{ app.icon }}" id="prev-icon-i"></i>
+            </div>
+            <div class="app-card-info">
+              <div class="app-card-name" id="prev-name">{{ app.name }}</div>
+              <div class="app-card-desc" id="prev-desc">{{ app.description }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-4">
+      <div class="card-header">Sidebar preview</div>
+      <div class="card-body" style="padding:0.5rem;">
+        <div class="sidebar-item active" style="position:relative; pointer-events:none; border-radius:7px;">
+          <span class="app-dot" id="prev-dot"><i class="bi {{ app.icon }}" id="prev-dot-i"></i></span>
+          <span id="prev-sidebar-name">{{ app.name }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const GRADIENTS = {{ gradients | tojson }};
+const GRAD_MAP  = {};
+GRADIENTS.forEach(g => GRAD_MAP[g.id] = g.banner);
+
+function selectIcon(ic) {
+  document.getElementById('icon-val').value = ic;
+  document.querySelectorAll('.icon-option').forEach(el => {
+    el.classList.toggle('selected', el.dataset.icon === ic);
+  });
+  document.getElementById('prev-icon-i').className = 'bi ' + ic;
+  document.getElementById('prev-dot-i').className  = 'bi ' + ic;
+}
+
+function selectGrad(gid) {
+  document.getElementById('grad-val').value = gid;
+  document.querySelectorAll('.grad-option').forEach(el => {
+    el.classList.toggle('selected', el.dataset.grad === gid);
+  });
+  const banner  = GRAD_MAP[gid] || gid;
+  const iconEl  = document.getElementById('prev-icon');
+  const dotEl   = document.getElementById('prev-dot');
+  const bannerEl = document.getElementById('prev-banner');
+  // strip old grad/banner classes
+  iconEl.className  = 'app-icon ' + gid;
+  dotEl.className   = 'app-dot '  + gid;
+  bannerEl.className = 'app-card-banner ' + banner;
+}
+
+// Live name/desc update
+document.querySelector('[name=name]').addEventListener('input', e => {
+  document.getElementById('prev-name').textContent = e.target.value;
+  document.getElementById('prev-sidebar-name').textContent = e.target.value;
+});
+document.querySelector('[name=description]').addEventListener('input', e => {
+  document.getElementById('prev-desc').textContent = e.target.value;
+});
+</script>
+{% endblock %}

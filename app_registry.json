@@ -1,0 +1,47 @@
+[
+  {
+    "id": "datatrace",
+    "name": "DataTrace",
+    "description": "Catalog and visualize WH_STAGING stored procedures, data flow chains, and dependencies.",
+    "url_prefix": "/dwh",
+    "blueprint_module": "blueprints.datatrace",
+    "blueprint_name": "datatrace",
+    "icon": "bi-database-fill",
+    "gradient": "grad-blue-indigo",
+    "banner": "banner-blue-indigo",
+    "active": true,
+    "show_dashboard": true,
+    "show_sidebar": true,
+    "theme": "dark"
+  },
+  {
+    "id": "loadrunner",
+    "name": "LoadRunner",
+    "description": "Run and monitor the Fabric load plan step-by-step with live status streaming.",
+    "url_prefix": "/plan",
+    "blueprint_module": "blueprints.loadrunner",
+    "blueprint_name": "loadrunner",
+    "icon": "bi-play-circle-fill",
+    "gradient": "grad-green-teal",
+    "banner": "banner-green-teal",
+    "active": true,
+    "show_dashboard": true,
+    "show_sidebar": true,
+    "theme": "dark"
+  },
+  {
+    "id": "syncbuilder",
+    "name": "SyncBuilder",
+    "description": "Build and deploy Fabric Copy pipelines between any supported warehouse or SQL database.",
+    "url_prefix": "/pipeline",
+    "blueprint_module": "blueprints.syncbuilder",
+    "blueprint_name": "syncbuilder",
+    "icon": "bi-bezier2",
+    "gradient": "grad-cyan-blue",
+    "banner": "banner-cyan-blue",
+    "active": true,
+    "show_dashboard": true,
+    "show_sidebar": true,
+    "theme": "dark"
+  }
+]

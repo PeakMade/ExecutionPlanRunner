@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="flex items-center gap-2 mb-4 text-sm text-muted">
+  <a href="{{ url_for('datatrace.index') }}">Catalog</a>
+  <span>›</span>
+  <span>{{ page_title }}</span>
+</div>
+
+<div class="page-header flex justify-between items-center" style="flex-wrap:wrap; gap:0.5rem;">
+  <div>
+    <h1><i class="bi {{ icon }}"></i> {{ page_title }}</h1>
+    <div class="subtitle">
+      Showing {{ shown }} of {{ total }}
+      &nbsp;·&nbsp;
+      <a href="#" onclick="startFabricRefresh(event)">Refresh Catalog</a>
+    </div>
+  </div>
+</div>
+
+<div id="catalog-refresh-status" style="display:none; margin-bottom:0.5rem;
+     padding:0.4rem 0.75rem; border-radius:var(--radius); font-size:0.8rem;
+     background:var(--surface2); border:1px solid var(--border);">
+</div>
+
+{% if total == 0 %}
+<div class="alert alert-info" style="margin-bottom:1rem;">
+  No {{ page_title | lower }} found in the catalog yet.
+  Use <strong>Refresh Catalog</strong> above to fetch all items from Fabric.
+</div>
+{% endif %}
+
+<!-- Filter bar -->
+<form class="filter-bar" method="get">
+  <div class="filter-group flex-grow">
+    <label>Search</label>
+    <input type="text" name="q" class="form-control" value="{{ q }}"
+           placeholder="Name, folder, or description…" autofocus>
+  </div>
+  <div class="filter-group" style="min-width:260px;">
+    <label>Folder</label>
+    <select name="folder" class="form-select">
+      <option value="">All folders</option>
+      {% for f in folders %}
+      <option value="{{ f }}" {% if f == pfolder %}selected{% endif %}>{{ f }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="filter-group" style="justify-content:flex-end; padding-top:1.4rem;">
+    <div class="flex gap-2">
+      <button type="submit" class="btn btn-primary btn-sm">Search</button>
+      {% if q or pfolder %}
+      <a class="btn btn-secondary btn-sm" href="?">Clear</a>
+      {% endif %}
+    </div>
+  </div>
+</form>
+
+{% if items %}
+<div class="table-wrap" style="overflow-x:scroll; overflow-y:auto; max-height:calc(100vh - 260px);">
+  <table class="data-table" id="artifact-table" style="min-width:max-content;">
+    <thead style="position:sticky; top:0; z-index:2;">
+      <tr>
+        <th data-col="0" style="min-width:160px;">Name <span class="sort-arrow"></span></th>
+        <th data-col="1" style="min-width:180px;">Folder Path <span class="sort-arrow"></span></th>
+        <th data-col="2" style="min-width:160px;">Sources <span class="sort-arrow"></span></th>
+        <th data-col="3" style="min-width:160px;">Targets <span class="sort-arrow"></span></th>
+        <th data-col="4">Description <span class="sort-arrow"></span></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr>
+        <td data-val="{{ item.name }}">{{ item.name }}</td>
+        <td data-val="{{ item.folder_path }}" style="font-size:0.8rem; white-space:nowrap;">
+          {% if item.folder_path %}
+            {% set parts = item.folder_path.split(' / ') %}
+            {% for part in parts %}
+              {% if not loop.last %}
+                <span style="display:block; color:var(--text-muted);">{{ part }}</span>
+                <span style="display:block; color:var(--text-muted); margin-left:0.5rem; line-height:1;">&#8627;</span>
+              {% else %}
+                <span style="display:block; {% if parts|length > 1 %}margin-left:0.5rem;{% endif %}">{{ part }}</span>
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            <span style="color:var(--text-muted);">—</span>
+          {% endif %}
+        </td>
+        <td data-val="{{ item.sources | join(', ') }}" style="font-size:0.78rem; white-space:nowrap;">
+          {% for s in item.sources %}
+            <span style="display:block;">{{ s }}</span>
+          {% else %}
+            <span style="color:var(--text-muted);">—</span>
+          {% endfor %}
+        </td>
+        <td data-val="{{ item.targets | join(', ') }}" style="font-size:0.78rem; white-space:nowrap;">
+          {% for t in item.targets %}
+            <span style="display:block;">{{ t }}</span>
+          {% else %}
+            <span style="color:var(--text-muted);">—</span>
+          {% endfor %}
+        </td>
+        <td data-val="{{ item.description }}" style="font-size:0.82rem; color:var(--text-muted);">
+          {{ item.description if item.description else '—' }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% elif total > 0 %}
+<div class="alert alert-info">No {{ page_title | lower }} match your search.</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const CATALOG_START_URL  = "{{ url_for('datatrace.refresh_catalog') }}";
+const CATALOG_STATUS_URL = "{{ url_for('datatrace.refresh_catalog_status') }}";
+
+let _pollTimer = null;
+
+window.startFabricRefresh = function(e) {
+  e.preventDefault();
+  const bar = document.getElementById('catalog-refresh-status');
+  bar.style.display = '';
+  bar.style.borderColor = 'var(--border)';
+  bar.textContent = 'Starting catalog refresh…';
+
+  fetch(CATALOG_START_URL, { method: 'POST' })
+    .then(r => r.json())
+    .then(d => {
+      if (!d.ok) { showResult('error', d.message); return; }
+      _poll();
+    })
+    .catch(err => showResult('error', String(err)));
+};
+
+function _poll() {
+  clearTimeout(_pollTimer);
+  _pollTimer = setTimeout(() => {
+    fetch(CATALOG_STATUS_URL).then(r => r.json()).then(d => {
+      document.getElementById('catalog-refresh-status').textContent = d.message || d.status;
+      if (d.status === 'running') { _poll(); }
+      else { showResult(d.status, d.message); }
+    }).catch(() => _poll());
+  }, 2000);
+}
+
+function showResult(status, msg) {
+  clearTimeout(_pollTimer);
+  const bar = document.getElementById('catalog-refresh-status');
+  bar.textContent = msg;
+  if (status === 'done') {
+    bar.style.borderColor = '#4ade80';
+    setTimeout(() => location.reload(), 1500);
+  } else {
+    bar.style.borderColor = '#f87171';
+  }
+}
+
+(function() {
+  const table = document.getElementById('artifact-table');
+  if (!table) return;
+  const tbody = table.tBodies[0];
+  let sortCol = -1, sortAsc = true;
+
+  table.querySelectorAll('thead th').forEach(th => {
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', () => {
+      const col = +th.dataset.col;
+      sortAsc = (sortCol === col) ? !sortAsc : true;
+      sortCol = col;
+      const rows = Array.from(tbody.rows);
+      rows.sort((a, b) => {
+        const av = a.cells[col].getAttribute('data-val') || '';
+        const bv = b.cells[col].getAttribute('data-val') || '';
+        return sortAsc
+          ? av.localeCompare(bv, undefined, { sensitivity: 'base', numeric: true })
+          : bv.localeCompare(av, undefined, { sensitivity: 'base', numeric: true });
+      });
+      rows.forEach(r => tbody.appendChild(r));
+      table.querySelectorAll('thead th').forEach(t => {
+        const c = +t.dataset.col;
+        t.classList.toggle('sorted-asc',  c === sortCol && sortAsc);
+        t.classList.toggle('sorted-desc', c === sortCol && !sortAsc);
+      });
+    });
+  });
+})();
+</script>
+{% endblock %}

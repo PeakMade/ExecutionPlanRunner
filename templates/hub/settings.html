@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header flex justify-between items-center">
+  <div>
+    <h1>Settings</h1>
+    <div class="subtitle">Manage registered apps</div>
+  </div>
+  <a href="{{ url_for('hub.register') }}" class="btn btn-primary">
+    <i class="bi bi-plus-lg"></i> Add New App
+  </a>
+</div>
+
+<div class="card">
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>App</th>
+          <th>ID</th>
+          <th>URL Prefix</th>
+          <th>Status</th>
+          <th>Dashboard</th>
+          <th>Sidebar</th>
+          <th style="text-align:right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for app in registry %}
+        <tr>
+          <td>
+            <div class="flex items-center gap-2">
+              <div class="app-icon-sm {{ app.gradient }}">
+                <i class="bi {{ app.icon }}"></i>
+              </div>
+              <div>
+                <div class="font-bold">{{ app.name }}</div>
+                <div class="text-xs text-muted">{{ app.description[:60] }}{% if app.description|length > 60 %}…{% endif %}</div>
+              </div>
+            </div>
+          </td>
+          <td><code>{{ app.id }}</code></td>
+          <td><code>{{ app.url_prefix }}</code></td>
+          <td>
+            {% if app.active %}
+              <span class="badge badge-success">Active</span>
+            {% else %}
+              <span class="badge badge-gray">Inactive</span>
+            {% endif %}
+          </td>
+          <td>{% if app.show_dashboard %}<i class="bi bi-check-circle-fill" style="color:#22c55e;"></i>{% else %}<i class="bi bi-dash" style="color:#4b5563;"></i>{% endif %}</td>
+          <td>{% if app.show_sidebar %}<i class="bi bi-check-circle-fill" style="color:#22c55e;"></i>{% else %}<i class="bi bi-dash" style="color:#4b5563;"></i>{% endif %}</td>
+          <td style="text-align:right;">
+            <div class="flex gap-2 justify-end">
+              <a href="{{ url_for('hub.app_settings', app_id=app.id) }}"
+                 class="btn btn-secondary btn-sm"><i class="bi bi-pencil"></i></a>
+              <form action="{{ url_for('hub.deactivate_app', app_id=app.id) }}" method="post" style="display:inline;">
+                <button class="btn btn-secondary btn-sm" title="{{ 'Deactivate' if app.active else 'Activate' }}">
+                  <i class="bi {{ 'bi-pause-circle' if app.active else 'bi-play-circle' }}"></i>
+                </button>
+              </form>
+              {% if app.id not in ['hub', 'datatrace', 'loadrunner', 'syncbuilder'] %}
+              <form action="{{ url_for('hub.remove_app', app_id=app.id) }}" method="post" style="display:inline;"
+                    onsubmit="return confirm('Remove {{ app.name }}?');">
+                <button class="btn btn-danger btn-sm"><i class="bi bi-trash3"></i></button>
+              </form>
+              {% endif %}
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

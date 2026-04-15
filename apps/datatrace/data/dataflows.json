@@ -1,0 +1,304 @@
+[
+  {
+    "id": "73c5dcff-54b2-44d3-8d6a-c047b212318b",
+    "name": "Dataflow 3",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs Backup / Backup 2 / WH_STAGING",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "3eff3655-c945-454b-bfa1-df24bcde5117",
+    "name": "Dataflow 1",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs Backup / Testing",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "bcdf783b-fe20-4e33-afaa-9eaad8a3968e",
+    "name": "Dataflow 2",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 1 - Dev, Archive / Copy Jobs Backup / Testing",
+    "description": "",
+    "sources": [],
+    "targets": []
+  },
+  {
+    "id": "81421e57-5495-47a1-8251-a277f65b7f19",
+    "name": "DF2 - Import - ADAPTIVE_ADS_PROMOTIONS_2024",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / ADAPTIVE IMPORTS (to WH_ODS)",
+    "description": "The source file is \"dropped\" by FP&A into BaseCamp's File Drop Site and is imported into WH_ODS as WH_ODS.dbo.ADAPTIVE_ADS_PROMOTIONS_2024 ",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": [
+      "WH_ODS.dbo.ADAPTIVE_ADS_PROMOTIONS_2024"
+    ]
+  },
+  {
+    "id": "4265a289-6ddf-42e6-904f-383b4245a182",
+    "name": "DF2 - Import - ADAPTIVE_ADS_PROMOTIONS_2025",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / ADAPTIVE IMPORTS (to WH_ODS)",
+    "description": "The source file is \"dropped\" by FP&A into BaseCamp's File Drop Site and is imported into WH_ODS as WH_ODS.dbo.ADAPTIVE_ADS_PROMOTIONS_2025",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": [
+      "WH_ODS.dbo.ADAPTIVE_ADS_PROMOTIONS_2025"
+    ]
+  },
+  {
+    "id": "b8cd6308-326d-4879-9918-672889e0527d",
+    "name": "DF2 - Import - ADAPTIVE_ADS_PROMOTIONS_2026",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / ADAPTIVE IMPORTS (to WH_ODS)",
+    "description": "The source file is \"dropped\" by FP&A into BaseCamp's File Drop Site and is imported into WH_ODS as WH_ODS.dbo.ADAPTIVE_ADS_PROMOTIONS_2026",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": [
+      "WH_ODS.dbo.ADAPTIVE_ADS_PROMOTIONS_2026"
+    ]
+  },
+  {
+    "id": "ed82b856-b5c8-4d97-9aa3-403b1c778def",
+    "name": "DF2 - Import - ADAPTIVE_BUDGET_YEAR_RATE_WORKBOOK",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / ADAPTIVE IMPORTS (to WH_ODS)",
+    "description": "The source file is \"dropped\" by FP&A into BaseCamp's File Drop Site and is imported into WH_ODS as WH_ODS.dbo.BUDGET_YEAR_RATE_WORKBOOK",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": [
+      "WH_ODS.dbo.BUDGET_YEAR_RATE_WORKBOOK"
+    ]
+  },
+  {
+    "id": "271078b0-630b-4505-8049-77382b95d285",
+    "name": "DF2 - Import - ADAPTIVE_CONCESSIONS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / ADAPTIVE IMPORTS (to WH_ODS)",
+    "description": "The source file is \"dropped\" by FP&A into BaseCamp's File Drop Site and is imported into WH_ODS as WH_ODS.dbo.ADAPTIVE_CONCESSIONS",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": [
+      "WH_ODS.dbo.ADAPTIVE_CONCESSIONS"
+    ]
+  },
+  {
+    "id": "dde6bc4a-3640-4066-a52b-7e87ec93c912",
+    "name": "DF2 - Import - ADAPTIVE_CURRENT_YEAR_RENT_ACHIEVED",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / ADAPTIVE IMPORTS (to WH_ODS)",
+    "description": "The source file is \"dropped\" by FP&A into BaseCamp's File Drop Site and is imported into WH_ODS as WH_ODS.dbo.ADAPTIVE_CURRENT_YEAR_RENT_ACHIEVED",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": [
+      "WH_ODS.dbo.ADAPTIVE_CURRENT_YEAR_RENT_ACHIEVED"
+    ]
+  },
+  {
+    "id": "6c48bea4-23c5-4ecd-b6ed-db82e9de687f",
+    "name": "DF2 - Import - ADAPTIVE_MF_RENTAL_INCOME_INPUT",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / ADAPTIVE IMPORTS (to WH_ODS)",
+    "description": "The source file is \"dropped\" by FP&A into BaseCamp's File Drop Site and is imported into WH_ODS as WH_ODS.dbo.ADAPTIVE_MF_RENTAL_INCOME_INPUT.",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": [
+      "WH_ODS.dbo.ADAPTIVE_MF_RENTAL_INCOME_INPUT"
+    ]
+  },
+  {
+    "id": "10528b59-0a23-4e08-b9f8-1c5d375702ac",
+    "name": "DF2 - Import - ADAPTIVE_RISC",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / ADAPTIVE IMPORTS (to WH_ODS)",
+    "description": "The source file is \"dropped\" by FP&A into BaseCamp's File Drop Site and is imported into WH_ODS as WH_ODS.dbo.ADAPTIVE_RISC",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": [
+      "WH_ODS.dbo.ADAPTIVE_RISC"
+    ]
+  },
+  {
+    "id": "66c2cd80-a129-44ce-a282-72196a45fdad",
+    "name": "DF2 - Import - ADAPTIVE_WEEKLY_ASSUMPTIONS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / ADAPTIVE IMPORTS (to WH_ODS)",
+    "description": "The source file is \"dropped\" by FP&A into BaseCamp's File Drop Site and is imported into WH_ODS as WH_ODS.dbo.ADAPTIVE_WEEKLY_ASSUMPTIONS",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": [
+      "WH_ODS.dbo.ADAPTIVE_WEEKLY_ASSUMPTIONS"
+    ]
+  },
+  {
+    "id": "36923178-250a-44aa-91f6-5a6d51c94d8b",
+    "name": "DF2 - Import - ADAPTIVE_WEEKLY_TARGETS",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / ADAPTIVE IMPORTS (to WH_ODS)",
+    "description": "The source file is \"dropped\" by FP&A into BaseCamp's File Drop Site and is imported into WH_ODS as WH_ODS.dbo.ADAPTIVE_WEEKLY_TARGETS",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": [
+      "WH_ODS.dbo.ADAPTIVE_WEEKLY_TARGETS"
+    ]
+  },
+  {
+    "id": "d0b3967b-f7ce-4198-9ae8-d2f77adec086",
+    "name": "DF2 - Import - ACTIVEDIRECTORYEXPORT",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / EMPLOYEE IMPORTS",
+    "description": "",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": []
+  },
+  {
+    "id": "8e861e31-c89b-471a-9ec1-4644baf562b4",
+    "name": "DF2 - Import - PAYCOM",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / EMPLOYEE IMPORTS",
+    "description": "",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": []
+  },
+  {
+    "id": "5ea0cadb-444f-43a1-ba88-baa15b5b45aa",
+    "name": "DF2 - Import - PAYCOM_PREHIRE_CANADA",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / EMPLOYEE IMPORTS",
+    "description": "",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": []
+  },
+  {
+    "id": "e9d9da5a-3e48-4b68-8db5-5e8e924c32ef",
+    "name": "DF2 - Import - PAYCOM_PREHIRE_US",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / EMPLOYEE IMPORTS",
+    "description": "",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": []
+  },
+  {
+    "id": "032e113c-2e39-4c8a-bdde-488389afe1b6",
+    "name": "DF2 - Import - LEADERSHIP COMPLAINCE DETAILED",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / LEADERSHIP SCORECARD IMPORTS",
+    "description": "",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": []
+  },
+  {
+    "id": "5279cfb6-5170-437e-a50b-868a897204a6",
+    "name": "DF2 - Import - LS_IIPP",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / LEADERSHIP SCORECARD IMPORTS",
+    "description": "",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": []
+  },
+  {
+    "id": "26bae187-3aeb-499f-9521-ddfa1dfb7bcf",
+    "name": "DF2 - Import - LS_LEASE_FILE_AUDIT",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / LEADERSHIP SCORECARD IMPORTS",
+    "description": "",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": []
+  },
+  {
+    "id": "fd0e5ed7-87a7-4977-b0fc-f5cb2c8cd099",
+    "name": "DF2 - Import - LS_PREPAID_VISA",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / LEADERSHIP SCORECARD IMPORTS",
+    "description": "",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": []
+  },
+  {
+    "id": "1d74252a-8236-433d-acab-2d716530d405",
+    "name": "DF2 - Import - LS_RISK_ASSESSMENT",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / LEADERSHIP SCORECARD IMPORTS",
+    "description": "",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": []
+  },
+  {
+    "id": "443c07f5-907b-4f47-8ed3-73b1b31a7884",
+    "name": "DF2 - Import - PEAKMADE COMPLIANCE",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / LEADERSHIP SCORECARD IMPORTS",
+    "description": "",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": []
+  },
+  {
+    "id": "f008630b-8502-4f41-a131-661945f519bd",
+    "name": "DF2 - Import - TIMESHEET",
+    "workspace_id": "a28164c3-c392-4848-83d4-b4a26f4bdef3",
+    "workspace_name": "Fabric ETL Workspace",
+    "folder_path": "Processing (Pipelines, Loaders, etc) / 2 - QA / FILE IMPORT PROCESSES / LEADERSHIP SCORECARD IMPORTS",
+    "description": "",
+    "sources": [
+      "SharePoint: https://peakcampus.sharepoint.com/sites/Technology"
+    ],
+    "targets": []
+  }
+]

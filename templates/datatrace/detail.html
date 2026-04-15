@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Breadcrumb -->
+<div class="flex items-center gap-2 mb-4 text-sm text-muted">
+  <a href="{{ url_for('datatrace.index') }}">Catalog</a>
+  <span>›</span>
+  <span>{{ proc.name }}</span>
+</div>
+
+<div class="page-header">
+  <div class="flex items-center gap-3" style="flex-wrap:wrap;">
+    <h1 style="margin:0;">{{ proc.name }}</h1>
+    <div class="flex gap-2" style="flex-wrap:wrap;">
+      <span class="badge badge-purple">{{ proc.type }}</span>
+      <span class="badge badge-teal">{{ proc.load_strategy }}</span>
+      <span class="badge badge-blue">{{ proc.warehouse }}</span>
+      {% if proc.cross_db %}<span class="badge badge-amber">Cross-DB</span>{% endif %}
+    </div>
+  </div>
+  {% if proc.description %}
+  <p class="subtitle mt-2">{{ proc.description }}</p>
+  {% endif %}
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-bottom:1rem;">
+  <div class="card">
+    <div class="card-header"><i class="bi bi-box-arrow-in-right"></i> Sources</div>
+    <div class="card-body">
+      {% if proc.sources %}
+      <ul style="margin:0; padding-left:1.2rem;">
+        {% for s in proc.sources %}
+        <li><a href="{{ url_for('datatrace.table_usage', table_name=s) }}">{{ s }}</a></li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <span class="text-muted">No sources listed.</span>
+      {% endif %}
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><i class="bi bi-box-arrow-right"></i> Targets</div>
+    <div class="card-body">
+      {% if proc.targets %}
+      <ul style="margin:0; padding-left:1.2rem;">
+        {% for t in proc.targets %}
+        <li><a href="{{ url_for('datatrace.table_usage', table_name=t) }}">{{ t }}</a></li>
+        {% endfor %}
+      </ul>
+      {% else %}
+      <span class="text-muted">No targets listed.</span>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% if exec_entries %}
+<div class="card mb-4">
+  <div class="card-header"><i class="bi bi-calendar2-check"></i> Execution Plan Entries ({{ exec_entries|length }})</div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Exec ID</th>
+          <th>Master</th>
+          <th>Area</th>
+          <th>Group</th>
+          <th>Step ID</th>
+          <th>Type</th>
+          <th>Active</th>
+          <th>Last Run</th>
+          <th>Status</th>
+          <th>Duration</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in exec_entries %}
+        <tr>
+          <td><code>{{ e.execution_id }}</code></td>
+          <td>{{ e.master_name }}</td>
+          <td>{{ e.area_name }}</td>
+          <td>{{ e.group_name }}</td>
+          <td>{{ e.step_id }}</td>
+          <td><span class="badge badge-purple">{{ e.step_type }}</span></td>
+          <td>
+            {% if e.active %}
+              <span class="badge badge-teal">Active</span>
+            {% else %}
+              <span class="badge" style="background:#2d2d2d;color:#888;">Inactive</span>
+            {% endif %}
+          </td>
+          <td class="text-muted">{{ e.last_run_date }}</td>
+          <td>
+            {% if e.last_run_status == 'SUCCESS' %}
+              <span class="badge badge-teal">{{ e.last_run_status }}</span>
+            {% elif e.last_run_status == '—' %}
+              <span class="text-muted">—</span>
+            {% else %}
+              <span class="badge badge-amber">{{ e.last_run_status }}</span>
+            {% endif %}
+          </td>
+          <td class="text-muted">{{ e.last_run_duration }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+{% if transforms %}
+<div class="card mb-4">
+  <div class="card-header"><i class="bi bi-shuffle"></i> Transformations ({{ transforms|length }})</div>
+  <div class="table-wrap">
+    <table class="data-table">
+      <thead>
+        <tr><th>Field</th><th>Expression</th></tr>
+      </thead>
+      <tbody>
+        {% for tx in transforms %}
+        <tr>
+          <td><strong>{{ tx.field }}</strong></td>
+          <td><code>{{ tx.expression }}</code></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
+<div class="card mb-4">
+  <div class="card-header"><i class="bi bi-diagram-3"></i> Data Flow</div>
+  <div class="card-body mermaid-wrap">
+    <div class="mermaid">{{ chart }}</div>
+  </div>
+</div>
+
+{% if proc.sql %}
+<div class="card">
+  <div class="card-header">
+    <i class="bi bi-code-slash"></i> SQL Definition
+    <button class="btn btn-secondary btn-sm" style="float:right;"
+            onclick="document.getElementById('sql-block').style.display = document.getElementById('sql-block').style.display === 'none' ? '' : 'none'">
+      Toggle
+    </button>
+  </div>
+  <div id="sql-block" style="display:none;">
+    <pre class="code-block" style="margin:0; border-radius:0;">{{ proc.sql }}</pre>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+mermaid.initialize({ startOnLoad: true, theme: 'dark',
+  themeVariables: { darkMode: true, background: '#0d1117', primaryColor: '#1d4ed8' } });
+</script>
+{% endblock %}

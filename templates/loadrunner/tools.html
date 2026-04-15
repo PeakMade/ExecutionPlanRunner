@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header flex items-center gap-3">
+  <a href="{{ url_for('loadrunner.index') }}" class="btn btn-secondary btn-sm btn-icon">
+    <i class="bi bi-arrow-left"></i>
+  </a>
+  <div>
+    <h1>Tools</h1>
+    <div class="subtitle">LoadRunner utilities</div>
+  </div>
+</div>
+
+<div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+
+  <!-- DB Schema / Table Browser -->
+  <div class="card">
+    <div class="card-header"><i class="bi bi-table"></i> DB Object Browser</div>
+    <div class="card-body" style="display:flex; flex-direction:column; gap:0.75rem;">
+      <div>
+        <label class="form-label">Database</label>
+        <select id="db-sel" class="form-select" onchange="loadSchemas()">
+          <option value="">— select —</option>
+          {% for db in fabric_databases %}
+          <option value="{{ db }}">{{ db }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="form-label">Schema</label>
+        <select id="schema-sel" class="form-select" onchange="loadTables()" disabled>
+          <option value="">— select database first —</option>
+        </select>
+      </div>
+      <div>
+        <label class="form-label">Tables</label>
+        <div id="tables-list" class="code-block" style="height:200px; overflow-y:auto; white-space:pre-wrap;">
+          <span class="text-muted">No database selected</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SyncBuilder link -->
+  <div class="card">
+    <div class="card-header"><i class="bi bi-diagram-3"></i> Pipeline Builder</div>
+    <div class="card-body" style="display:flex; flex-direction:column; gap:0.75rem; align-items:flex-start;">
+      <p class="text-sm text-muted" style="margin:0;">
+        Build and deploy Fabric Copy pipelines visually.
+        Pipeline Builder has been promoted to its own full app — <strong>SyncBuilder</strong>.
+      </p>
+      <a href="{{ url_for('syncbuilder.index') }}" class="btn btn-primary">
+        <i class="bi bi-arrow-right-circle"></i> Open SyncBuilder
+      </a>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const URLS = {
+  schemas: "{{ url_for('loadrunner.fabric_schemas') }}",
+  tables:  "{{ url_for('loadrunner.fabric_tables') }}",
+};
+
+function loadSchemas() {
+  const db = document.getElementById('db-sel').value;
+  const schSel = document.getElementById('schema-sel');
+  document.getElementById('tables-list').innerHTML = '<span class="text-muted">Select a schema</span>';
+  if (!db) { schSel.innerHTML = '<option value="">— select database first —</option>'; schSel.disabled = true; return; }
+  schSel.innerHTML = '<option value="">Loading…</option>'; schSel.disabled = true;
+  fetch(URLS.schemas + '?db=' + encodeURIComponent(db))
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) { schSel.innerHTML = '<option value="">' + data.error + '</option>'; return; }
+      schSel.innerHTML = '<option value="">— select schema —</option>' +
+        data.schemas.map(s => `<option value="${s}">${s}</option>`).join('');
+      schSel.disabled = false;
+    })
+    .catch(e => { schSel.innerHTML = '<option value="">Error: ' + e.message + '</option>'; });
+}
+
+function loadTables() {
+  const db     = document.getElementById('db-sel').value;
+  const schema = document.getElementById('schema-sel').value;
+  const box    = document.getElementById('tables-list');
+  if (!db || !schema) { box.innerHTML = '<span class="text-muted">Select schema first</span>'; return; }
+  box.innerHTML = 'Loading…';
+  fetch(URLS.tables + '?db=' + encodeURIComponent(db) + '&schema=' + encodeURIComponent(schema))
+    .then(r => r.json())
+    .then(data => {
+      if (data.error) { box.textContent = 'Error: ' + data.error; return; }
+      box.textContent = data.tables.length
+        ? data.tables.join('\n')
+        : 'No tables found.';
+    })
+    .catch(e => { box.textContent = 'Error: ' + e.message; });
+}
+</script>
+{% endblock %}

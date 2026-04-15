@@ -1,0 +1,5 @@
+flask>=3.0
+waitress>=3.0
+pyodbc>=5.0
+requests>=2.31
+azure-identity>=1.17

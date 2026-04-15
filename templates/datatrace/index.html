@@ -1,0 +1,315 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="page-header flex justify-between items-center" style="flex-wrap:wrap; gap:0.5rem;">
+  <div>
+    <h1>Process Catalog</h1>
+    <div class="subtitle">
+      Showing {{ shown }} of {{ total }} &nbsp;·&nbsp;
+      Run data: {{ exec_plan_loaded_at }}
+      &nbsp;·&nbsp;
+      <a href="#" onclick="refreshExecPlan(event)">Refresh</a>
+    </div>
+  </div>
+  <div class="flex gap-2 items-center">
+    <div class="view-toggle">
+      <a href="?q={{ q }}&type={{ ptype }}&warehouse={{ pwarehouse }}&strategy={{ pstrategy }}&table={{ ptable }}&role={{ prole }}&cross_db={{ cross }}&view=sp"
+         class="{% if view == 'sp' %}active{% endif %}">SP View</a>
+      <a href="?q={{ q }}&type={{ ptype }}&warehouse={{ pwarehouse }}&strategy={{ pstrategy }}&table={{ ptable }}&role={{ prole }}&cross_db={{ cross }}&view=table"
+         class="{% if view == 'table' %}active{% endif %}">Table View</a>
+      <a href="{{ url_for('datatrace.pipelines') }}"><i class="bi bi-lightning-charge"></i> Pipelines</a>
+      <a href="{{ url_for('datatrace.dataflows') }}"><i class="bi bi-water"></i> Dataflows</a>
+    </div>
+    <a href="{{ url_for('datatrace.chain') }}" class="btn btn-secondary btn-sm">
+      <i class="bi bi-diagram-3"></i> Flow Chain
+    </a>
+    <button id="refresh-catalog-btn" onclick="startCatalogRefresh(event)"
+            class="btn btn-secondary btn-sm" title="Re-fetch all SP definitions from the databases and rebuild the catalog">
+      <i class="bi bi-arrow-clockwise" id="refresh-catalog-icon"></i> Refresh Catalog
+    </button>
+  </div>
+</div>
+<div id="catalog-refresh-status" style="display:none; margin-bottom:0.5rem;
+     padding:0.4rem 0.75rem; border-radius:var(--radius); font-size:0.8rem;
+     background:var(--surface2); border:1px solid var(--border);">
+</div>
+
+<!-- Filter bar -->
+<form class="filter-bar" method="get">
+  <input type="hidden" name="view" value="{{ view }}">
+  <div class="filter-group flex-grow">
+    <label>Search</label>
+    <input type="text" name="q" class="form-control" value="{{ q }}"
+           placeholder="Name, description…" autofocus>
+  </div>
+  <div class="filter-group flex-grow">
+    <label>Table</label>
+    <input type="text" name="table" class="form-control" value="{{ ptable }}"
+           placeholder="Filter by table…">
+  </div>
+  <div class="filter-group">
+    <label>Type</label>
+    <select name="type" class="form-select">
+      <option value="">All types</option>
+      {% for t in types %}
+      <option value="{{ t }}" {% if t == ptype %}selected{% endif %}>{{ t }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Warehouse</label>
+    <select name="warehouse" class="form-select">
+      <option value="">All warehouses</option>
+      {% for w in warehouses %}
+      <option value="{{ w }}" {% if w == pwarehouse %}selected{% endif %}>{{ w }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Strategy</label>
+    <select name="strategy" class="form-select">
+      <option value="">All strategies</option>
+      {% for s in strategies %}
+      <option value="{{ s }}" {% if s == pstrategy %}selected{% endif %}>{{ s }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="filter-group">
+    <label>Role</label>
+    <select name="role" class="form-select">
+      <option value="">All roles</option>
+      <option value="Source" {% if prole == 'Source' %}selected{% endif %}>Source</option>
+      <option value="Target" {% if prole == 'Target' %}selected{% endif %}>Target</option>
+    </select>
+  </div>
+  <div class="filter-group" style="justify-content:flex-end; padding-top:1.4rem;">
+    <label style="display:flex; align-items:center; gap:0.4rem; cursor:pointer; font-size:0.8rem; font-weight:400; text-transform:none; letter-spacing:0;">
+      <input type="checkbox" name="cross_db" value="1" {% if cross == '1' %}checked{% endif %}>
+      Cross-DB only
+    </label>
+  </div>
+  <div class="filter-group" style="justify-content:flex-end; padding-top:1.4rem;">
+    <div class="flex gap-2">
+      <button type="submit" class="btn btn-primary btn-sm">Search</button>
+      {% if q or ptype or pwarehouse or pstrategy or ptable or prole or cross %}
+      <a class="btn btn-secondary btn-sm" href="?view={{ view }}">Clear</a>
+      {% endif %}
+    </div>
+  </div>
+</form>
+
+{% if view == 'sp' %}
+  {% if processes %}
+  <div class="table-wrap">
+    <table class="data-table" id="catalog-table">
+      <thead>
+        <tr>
+          <th data-col="0">Name <span class="sort-arrow"></span></th>
+          <th data-col="1">Warehouse <span class="sort-arrow"></span></th>
+          <th data-col="2">Type <span class="sort-arrow"></span></th>
+          <th data-col="3">Strategy <span class="sort-arrow"></span></th>
+          <th data-col="4">Sources <span class="sort-arrow"></span></th>
+          <th data-col="5">Targets <span class="sort-arrow"></span></th>
+          <th data-col="6">Transforms <span class="sort-arrow"></span></th>
+          <th data-col="7">Cross-DB <span class="sort-arrow"></span></th>
+          <th data-col="8">Last Run <span class="sort-arrow"></span></th>
+          <th data-col="9">Status <span class="sort-arrow"></span></th>
+          <th data-col="10">Duration <span class="sort-arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in processes %}
+        <tr>
+          <td data-val="{{ p.name }}">
+            <a href="{{ url_for('datatrace.detail', name=p.name) }}">{{ p.name }}</a>
+          </td>
+          <td data-val="{{ p.warehouse }}"><span class="badge badge-blue">{{ p.warehouse }}</span></td>
+          <td data-val="{{ p.type }}"><span class="badge badge-purple">{{ p.type }}</span></td>
+          <td data-val="{{ p.load_strategy }}"><span class="badge badge-teal">{{ p.load_strategy }}</span></td>
+          <td data-val="{{ p.sources|sort|join(', ') }}" style="font-size:0.78rem;">
+            {% for s in p.sources %}
+            <a href="{{ url_for('datatrace.table_usage', table_name=s) }}" style="display:block;">{{ s }}</a>
+            {% endfor %}
+          </td>
+          <td data-val="{{ p.targets|sort|join(', ') }}" style="font-size:0.78rem;">
+            {% for t in p.targets %}
+            <a href="{{ url_for('datatrace.table_usage', table_name=t) }}" style="display:block;">{{ t }}</a>
+            {% endfor %}
+          </td>
+          <td data-val="{{ p.transformations|length if p.transformations else 0 }}" style="text-align:center;">
+            {% if p.transformations %}{{ p.transformations|length }}{% else %}—{% endif %}
+          </td>
+          <td data-val="{{ '1' if p.cross_db else '0' }}" style="text-align:center;">
+            {% if p.cross_db %}<span class="badge badge-amber">Yes</span>{% else %}—{% endif %}
+          </td>
+          <td data-val="{{ p.last_run_date }}">{{ p.last_run_date }}</td>
+          <td data-val="{{ p.last_run_status }}">
+            {% set st = p.last_run_status | lower %}
+            <span class="badge {% if st == 'success' %}badge-success{% elif st == 'failed' %}badge-failed{% elif st == 'running' %}badge-running{% else %}badge-gray{% endif %}">
+              {{ p.last_run_status }}
+            </span>
+          </td>
+          <td data-val="{{ p.last_run_duration }}">{{ p.last_run_duration }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="alert alert-info">No processes match your search.</div>
+  {% endif %}
+
+{% else %}
+  {% if flat_rows %}
+  <div class="table-wrap">
+    <table class="data-table" id="catalog-table">
+      <thead>
+        <tr>
+          <th data-col="0">Table <span class="sort-arrow"></span></th>
+          <th data-col="1">Role <span class="sort-arrow"></span></th>
+          <th data-col="2">SP Name <span class="sort-arrow"></span></th>
+          <th data-col="3">Warehouse <span class="sort-arrow"></span></th>
+          <th data-col="4">Type <span class="sort-arrow"></span></th>
+          <th data-col="5">Strategy <span class="sort-arrow"></span></th>
+          <th data-col="6">Cross-DB <span class="sort-arrow"></span></th>
+          <th data-col="7">Last Run <span class="sort-arrow"></span></th>
+          <th data-col="8">Status <span class="sort-arrow"></span></th>
+          <th data-col="9">Duration <span class="sort-arrow"></span></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in flat_rows %}
+        <tr>
+          <td data-val="{{ r.table }}">
+            <a href="{{ url_for('datatrace.table_usage', table_name=r.table) }}">{{ r.table }}</a>
+          </td>
+          <td data-val="{{ r.role }}">
+            <span class="badge {% if r.role == 'Source' %}badge-teal{% elif r.role == 'Target' %}badge-purple{% else %}badge-gray{% endif %}">
+              {{ r.role }}
+            </span>
+          </td>
+          <td data-val="{{ r.name }}">
+            <a href="{{ url_for('datatrace.detail', name=r.name) }}">{{ r.name }}</a>
+          </td>
+          <td data-val="{{ r.warehouse }}"><span class="badge badge-blue">{{ r.warehouse }}</span></td>
+          <td data-val="{{ r.type }}"><span class="badge badge-purple">{{ r.type }}</span></td>
+          <td data-val="{{ r.load_strategy }}"><span class="badge badge-teal">{{ r.load_strategy }}</span></td>
+          <td data-val="{{ '1' if r.cross_db else '0' }}" style="text-align:center;">
+            {% if r.cross_db %}<span class="badge badge-amber">Yes</span>{% else %}—{% endif %}
+          </td>
+          <td data-val="{{ r.last_run_date }}">{{ r.last_run_date }}</td>
+          <td data-val="{{ r.last_run_status }}">
+            {% set st = r.last_run_status | lower %}
+            <span class="badge {% if st == 'success' %}badge-success{% elif st == 'failed' %}badge-failed{% else %}badge-gray{% endif %}">
+              {{ r.last_run_status }}
+            </span>
+          </td>
+          <td data-val="{{ r.last_run_duration }}">{{ r.last_run_duration }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="alert alert-info">No rows match your search.</div>
+  {% endif %}
+{% endif %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const REFRESH_URL        = "{{ url_for('datatrace.refresh_exec_plan') }}";
+const CATALOG_START_URL  = "{{ url_for('datatrace.refresh_catalog') }}";
+const CATALOG_STATUS_URL = "{{ url_for('datatrace.refresh_catalog_status') }}";
+
+let _catalogPollTimer = null;
+
+window.startCatalogRefresh = function(e) {
+  e.preventDefault();
+  const btn  = document.getElementById('refresh-catalog-btn');
+  const icon = document.getElementById('refresh-catalog-icon');
+  const bar  = document.getElementById('catalog-refresh-status');
+
+  btn.disabled = true;
+  icon.className = 'bi bi-arrow-clockwise spin';
+  bar.style.display = '';
+  bar.style.borderColor = 'var(--border)';
+  bar.textContent = 'Starting catalog refresh…';
+
+  fetch(CATALOG_START_URL, { method: 'POST' })
+    .then(r => r.json())
+    .then(d => {
+      if (!d.ok) { showCatalogResult('error', d.message); return; }
+      _pollCatalogStatus();
+    })
+    .catch(err => showCatalogResult('error', String(err)));
+};
+
+function _pollCatalogStatus() {
+  clearTimeout(_catalogPollTimer);
+  _catalogPollTimer = setTimeout(() => {
+    fetch(CATALOG_STATUS_URL).then(r => r.json()).then(d => {
+      document.getElementById('catalog-refresh-status').textContent = d.message || d.status;
+      if (d.status === 'running') {
+        _pollCatalogStatus();
+      } else {
+        showCatalogResult(d.status, d.message);
+      }
+    }).catch(() => _pollCatalogStatus());
+  }, 2000);
+}
+
+function showCatalogResult(status, msg) {
+  clearTimeout(_catalogPollTimer);
+  const btn  = document.getElementById('refresh-catalog-btn');
+  const icon = document.getElementById('refresh-catalog-icon');
+  const bar  = document.getElementById('catalog-refresh-status');
+  btn.disabled = false;
+  icon.className = 'bi bi-arrow-clockwise';
+  bar.textContent = msg;
+  if (status === 'done') {
+    bar.style.borderColor = '#4ade80';
+    setTimeout(() => location.reload(), 1500);
+  } else {
+    bar.style.borderColor = '#f87171';
+  }
+}
+
+
+window.refreshExecPlan = function(e) {
+  e.preventDefault();
+  fetch(REFRESH_URL).then(r => r.json()).then(d => { if (d.ok) location.reload(); });
+};
+
+(function() {
+  const table = document.getElementById('catalog-table');
+  if (!table) return;
+  const tbody = table.tBodies[0];
+  let sortCol = -1, sortAsc = true;
+
+  table.querySelectorAll('thead th').forEach(th => {
+    th.style.cursor = 'pointer';
+    th.addEventListener('click', () => {
+      const col = +th.dataset.col;
+      sortAsc = (sortCol === col) ? !sortAsc : true;
+      sortCol = col;
+      const rows = Array.from(tbody.rows);
+      rows.sort((a, b) => {
+        const av = a.cells[col].getAttribute('data-val') || '';
+        const bv = b.cells[col].getAttribute('data-val') || '';
+        return sortAsc
+          ? av.localeCompare(bv, undefined, { sensitivity:'base', numeric:true })
+          : bv.localeCompare(av, undefined, { sensitivity:'base', numeric:true });
+      });
+      rows.forEach(r => tbody.appendChild(r));
+      table.querySelectorAll('thead th').forEach(t => {
+        const c = +t.dataset.col;
+        t.classList.toggle('sorted-asc',  c === sortCol && sortAsc);
+        t.classList.toggle('sorted-desc', c === sortCol && !sortAsc);
+      });
+    });
+  });
+})();
+</script>
+{% endblock %}

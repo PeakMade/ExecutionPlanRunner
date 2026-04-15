@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ page_title }} — Fabric Admin{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    /* ── Force blue, no purple anywhere ───────────────────────────── */
+    a, a:link, a:visited                { color: #3b82f6 !important; }
+    a:hover                             { color: #2563eb !important; }
+
+    /* Topbar brand stays white */
+    .topbar-brand, .topbar-brand:link,
+    .topbar-brand:visited               { color: #e2e8f0 !important; }
+    .topbar-brand:hover                 { color: #ffffff !important; }
+
+    /* Sidebar items */
+    .sidebar-item,
+    .sidebar-item:link,
+    .sidebar-item:visited               { color: #8892a4 !important; text-decoration: none !important; }
+    .sidebar-item:hover                 { color: #e2e8f0 !important; }
+    .sidebar-item.active,
+    .sidebar-item.active:link,
+    .sidebar-item.active:visited        { color: #ffffff !important;
+                                          background: rgba(59,130,246,0.14) !important;
+                                          border-left-color: #3b82f6 !important; }
+
+    /* Keep icon dot characters white regardless of link visited state */
+    .app-dot, .app-dot *,
+    .brand-icon, .brand-icon *          { color: #ffffff !important; }
+
+    /* Keep button text colours */
+    .btn-secondary, .btn-secondary:link,
+    .btn-secondary:visited              { color: #e2e8f0 !important; }
+    .btn-primary, .btn-primary:link,
+    .btn-primary:visited                { background: #3b82f6 !important; color: #fff !important; }
+
+    /* Gradients — all blue */
+    .grad-blue-indigo                   { background: linear-gradient(135deg,#3b82f6,#2563eb) !important; }
+    .grad-violet-indigo                 { background: linear-gradient(135deg,#60a5fa,#2563eb) !important; }
+    .grad-purple-pink                   { background: linear-gradient(135deg,#06b6d4,#3b82f6) !important; }
+    .grad-cyan-blue                     { background: linear-gradient(135deg,#06b6d4,#3b82f6) !important; }
+    .banner-blue-indigo                 { background: linear-gradient(90deg,#3b82f6,#2563eb) !important; }
+    .banner-violet-indigo               { background: linear-gradient(90deg,#60a5fa,#2563eb) !important; }
+    .banner-purple-pink,
+    .banner-cyan-blue                   { background: linear-gradient(90deg,#06b6d4,#3b82f6) !important; }
+
+    /* Badges */
+    .badge-purple                       { background: rgba(14,165,233,.18) !important; color: #7dd3fc !important; }
+
+    /* View toggles */
+    .view-toggle a.active,
+    .view-toggle button.active          { background: #3b82f6 !important; color: #ffffff !important; }
+
+    /* Spinning icon for in-progress actions */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { display:inline-block; animation: spin 1s linear infinite; }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- ── Topbar ──────────────────────────────────────────────────────────────── -->
+<header class="topbar">
+  <a class="topbar-brand" href="{{ url_for('hub.home') }}">
+    <span class="brand-icon grad-blue-indigo"><i class="bi bi-hexagon-fill"></i></span>
+    <span>Fabric Admin</span>
+  </a>
+
+  {% if current_app_id and current_app_id != 'hub' %}
+    {% for app in registry %}
+      {% if app.id == current_app_id %}
+      <span class="topbar-app-name">
+        <i class="bi {{ app.icon }}"></i> {{ app.name }}
+      </span>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  <div style="margin-left:auto; display:flex; align-items:center; gap:0.75rem;">
+    <a href="{{ url_for('hub.settings') }}" class="btn btn-secondary btn-sm btn-icon"
+       title="Settings"><i class="bi bi-gear"></i></a>
+  </div>
+</header>
+
+<!-- ── Sidebar ─────────────────────────────────────────────────────────────── -->
+<nav class="sidebar" id="sidebar">
+  <div style="padding: 0.5rem 0 0.25rem;">
+    <a href="{{ url_for('hub.home') }}"
+       class="sidebar-item {% if current_app_id == 'hub' %}active{% endif %}">
+      <span class="app-dot grad-blue-indigo"><i class="bi bi-house-fill"></i></span>
+      Dashboard
+    </a>
+  </div>
+
+  {% set sidebar_apps = registry | selectattr('show_sidebar') | selectattr('active') | list %}
+  {% if sidebar_apps %}
+  <div class="sidebar-section" style="margin-top:0.5rem;">Apps</div>
+  {% for app in sidebar_apps %}
+    {% if app.id != 'hub' %}
+    <a href="{{ app.url_prefix }}"
+       class="sidebar-item {% if current_app_id == app.id %}active{% endif %}">
+      <span class="app-dot {{ app.gradient }}"><i class="bi {{ app.icon }}"></i></span>
+      {{ app.name }}
+    </a>
+    {% endif %}
+  {% endfor %}
+  {% endif %}
+
+  <div style="margin-top: auto; padding: 0.75rem 0 0;">
+    <a href="{{ url_for('hub.settings') }}"
+       class="sidebar-item {% if current_app_id == 'hub' and request.endpoint == 'hub.settings' %}active{% endif %}">
+      <span class="app-dot grad-slate"><i class="bi bi-gear-fill"></i></span>
+      Settings
+    </a>
+  </div>
+</nav>
+
+<!-- ── Main content ─────────────────────────────────────────────────────────── -->
+<main class="main-content">
+  {% block content %}{% endblock %}
+</main>
+
+{% block extra_js %}{% endblock %}
+</body>
+</html>
